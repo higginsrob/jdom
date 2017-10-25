@@ -1,0 +1,18 @@
+{
+  "name": "jdom",
+  "version": "1.0.0",
+  "description": "lightweight dom builder",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test.js"
+  },
+  "author": "Rob Higgins <higginsrob@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/higginsrob/jdom.git"
+  },
+  "devDependencies": {
+    "mocha": "^4.0.1"
+  }
+}
