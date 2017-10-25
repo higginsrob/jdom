@@ -1,0 +1,38 @@
+{
+    "name": "jdom",
+    "version": "3.3.0-rc",
+    "description": "lightweight dom builder",
+    "main": "index.js",
+    "scripts": {
+        "build": "webpack-cli --env NODE_ENV=production",
+        "preversion": "npm run prettier",
+        "prepublish": "npm run prettier",
+        "prettier": "prettier --loglevel=error --write '**/*.js' '**/*.json' '**/*.jsx' '**/*.css' '**/*.md'",
+        "start": "webpack-dev-server",
+        "watch": "node --test --watch index.js",
+        "test": "node --test ./test"
+    },
+    "author": "Rob Higgins <higginsrob@gmail.com>",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/higginsrob/jdom.git"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged"
+        }
+    },
+    "lint-staged": {
+        "*.{js,jsx,json,css,md}": [
+            "prettier --write",
+            "git add"
+        ]
+    },
+    "dependencies": {
+        "@typescript-eslint/parser": "^6.7.4",
+        "eslint": "^8.50.0",
+        "prettier": "^3.0.3",
+        "typescript": "^5.2.2"
+    }
+}
