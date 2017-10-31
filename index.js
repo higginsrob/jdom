@@ -121,6 +121,7 @@ module.exports.ANIMATETRANSFORM = function ANIMATETRANSFORM(props) {
     return createElement('animateTransform', props, defaultNameSpace);
 }
 
+// get current script
 module.exports.currentScript = function currentScript() {
 	if (document.currentScript) {
 		return document.currentScript;
@@ -129,8 +130,14 @@ module.exports.currentScript = function currentScript() {
 	return scripts[scripts.length - 1];
 };
 
-module.exports.style = function style(elem, props) {
-    if (elem && isObject(props)){
+// convienence methods
+module.exports.id = document.getElementById;
+module.exports.$ = document.querySelector;
+module.exports.$$ = document.querySelectorAll;
+
+// style
+var style = module.exports.style = function style(elem, props) {
+    if (isElement(elem) && isObject(props)){
         Object.keys(props).forEach((key) => {
             if (elem.style) {
                 elem.style[key] = props[key];
@@ -147,5 +154,20 @@ function toCamelCase (str) {
 
 function isObject(obj) {
     return Object.prototype.toString.call(obj).slice(8,-1) === 'Object';
+}
+
+function isArray(obj) {
+    return Array.isArray(obj);
+}
+
+function isElement(obj){
+    return (
+        typeof HTMLElement === "object"
+            ? obj instanceof HTMLElement
+            : obj
+                && typeof obj === "object"
+                && obj !== null && obj.nodeType === 1
+                && typeof obj.nodeName==="string"
+    );
 }
 
