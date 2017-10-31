@@ -1,5 +1,5 @@
-var createElement = module.exports = function createElement(tag, props, ns) {
-    var elem = typeof ns === 'string'
+const createElement = module.exports = function createElement(tag, props, ns) {
+    const elem = typeof ns === 'string'
         ? document.createElementNS(ns, tag)
         : document.createElement(tag);
     if (isObject(props)) {
@@ -83,7 +83,7 @@ module.exports.IFRAME = function IFRAME(props) {
 }
 
 // SVG
-var defaultNameSpace = 'http://www.w3.org/2000/svg';
+const defaultNameSpace = 'http://www.w3.org/2000/svg';
 
 module.exports.SVG = function SVG(props) {
     return createElement('svg', props, defaultNameSpace);
@@ -126,7 +126,7 @@ module.exports.currentScript = function currentScript() {
 	if (document.currentScript) {
 		return document.currentScript;
 	}
-	var scripts = document.getElementsByTagName('script');
+	const scripts = document.getElementsByTagName('script');
 	return scripts[scripts.length - 1];
 };
 
@@ -136,7 +136,7 @@ module.exports.$ = document.querySelector;
 module.exports.$$ = document.querySelectorAll;
 
 // style
-var style = module.exports.style = function style(elem, props) {
+const style = module.exports.style = function style(elem, props) {
     if (isElement(elem) && isObject(props)){
         Object.keys(props).forEach((key) => {
             if (elem.style) {
@@ -152,15 +152,15 @@ function toCamelCase (str) {
     }).replace(/\s+/g, '');
 }
 
-function isObject(obj) {
+module.exports.isObject = function isObject(obj) {
     return Object.prototype.toString.call(obj).slice(8,-1) === 'Object';
 }
 
-function isArray(obj) {
+module.exports.isArray = function isArray(obj) {
     return Array.isArray(obj);
 }
 
-function isElement(obj){
+module.exports.isElement = function isElement(obj){
     return (
         typeof HTMLElement === "object"
             ? obj instanceof HTMLElement
