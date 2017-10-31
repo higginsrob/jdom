@@ -1,6 +1,6 @@
 {
   "name": "jdom",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "lightweight dom builder",
   "main": "index.js",
   "scripts": {
