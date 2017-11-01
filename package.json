@@ -4,6 +4,9 @@
   "description": "lightweight dom builder",
   "main": "index.js",
   "scripts": {
+    "predocs": "docco -l plain-markdown -t README.jst -c node_modules/docco/resources/parallel/docco.css index.js",
+    "docs": "mv docs/index.html README.md",
+    "postdocs": "docco index.js",
     "test": "mocha test.js"
   },
   "author": "Rob Higgins <higginsrob@gmail.com>",
@@ -14,5 +17,8 @@
   },
   "devDependencies": {
     "mocha": "^4.0.1"
+  },
+  "dependencies": {
+    "docco": "^0.7.0"
   }
 }
