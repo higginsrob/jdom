@@ -17,7 +17,6 @@ _lightweight dom builder_
 ##### installation
 
 ```
-
 npm install jdom
 
 ```
@@ -28,8 +27,8 @@ _intended usage with webpack or browserify_
 
 ```
 const {
-   DIV, SPAN, SCRIPT, STYLE, // ...etc
    createElement, updateElement,
+   DIV, SPAN, SCRIPT, STYLE, // ...etc
    id, $, $$,
    on, once, off, dispatch,
    currentScript,
@@ -288,7 +287,7 @@ _update element style_
 * __isObject__ (_object_ __obj__)
 * __isArray__ (_object_ __obj__)
 * __isElement__ (_object_ __obj__)
-* _private_ __toCamelCase__ (_string_ __str__)
+* __toCamelCase__ (_string_ __str__)
 
 
 

@@ -37,13 +37,12 @@
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
               <h5 id="installation">installation</h5>
-<pre><code>
-npm install jdom
+<pre><code>npm install jdom
 </code></pre><h4 id="usage">usage</h4>
 <p><em>intended usage with webpack or browserify</em></p>
 <pre><code><span class="hljs-keyword">const</span> {
-   DIV, SPAN, SCRIPT, STYLE, <span class="hljs-comment">// ...etc</span>
    createElement, updateElement,
+   DIV, SPAN, SCRIPT, STYLE, <span class="hljs-comment">// ...etc</span>
    id, $, $$,
    on, once, off, dispatch,
    currentScript,
@@ -99,7 +98,7 @@ npm install jdom
             } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (key === <span class="hljs-string">'parent'</span> &amp;&amp; props.parent <span class="hljs-keyword">instanceof</span> HTMLElement) {
                 props.parent.appendChild(elem);
             } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (key === <span class="hljs-string">'children'</span>) {
-                <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(props.children)) {
+                <span class="hljs-keyword">if</span> (isArray(props.children)) {
                     props.children.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">child</span>) </span>{
                         <span class="hljs-keyword">if</span> (child <span class="hljs-keyword">instanceof</span> SVGElement || child <span class="hljs-keyword">instanceof</span> HTMLElement) {
                             elem.appendChild(child);
@@ -345,9 +344,9 @@ npm install jdom
 </code></pre>
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">module</span>.exports.id = <span class="hljs-built_in">document</span>.getElementById;
-<span class="hljs-built_in">module</span>.exports.$ = <span class="hljs-built_in">document</span>.querySelector;
-<span class="hljs-built_in">module</span>.exports.$$ = <span class="hljs-built_in">document</span>.querySelectorAll;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">module</span>.exports.id = <span class="hljs-function"><span class="hljs-params">id</span> =&gt;</span> <span class="hljs-built_in">document</span>.getElementById(id);
+<span class="hljs-built_in">module</span>.exports.$ = <span class="hljs-function"><span class="hljs-params">selector</span> =&gt;</span> <span class="hljs-built_in">document</span>.querySelector(selector);
+<span class="hljs-built_in">module</span>.exports.$$ = <span class="hljs-function"><span class="hljs-params">selector</span> =&gt;</span> <span class="hljs-built_in">document</span>.querySelectorAll;</pre></div></div>
             
         </li>
         
@@ -482,10 +481,7 @@ npm install jdom
             elem.style[key] = props[key];
         });
     }
-}
-<span class="hljs-built_in">module</span>.exports.stop = <span class="hljs-function"><span class="hljs-params">id</span> =&gt;</span> {
-    <span class="hljs-keyword">delete</span> animations[id];
-};</pre></div></div>
+}</pre></div></div>
             
         </li>
         
@@ -514,18 +510,18 @@ npm install jdom
 <li><strong>isObject</strong> (<em>object</em> <strong>obj</strong>)</li>
 <li><strong>isArray</strong> (<em>object</em> <strong>obj</strong>)</li>
 <li><strong>isElement</strong> (<em>object</em> <strong>obj</strong>)</li>
-<li><em>private</em> <strong>toCamelCase</strong> (<em>string</em> <strong>str</strong>)</li>
+<li><strong>toCamelCase</strong> (<em>string</em> <strong>str</strong>)</li>
 </ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">module</span>.exports.isObject = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isObject</span>(<span class="hljs-params">obj</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> isObject = <span class="hljs-built_in">module</span>.exports.isObject = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isObject</span>(<span class="hljs-params">obj</span>) </span>{
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">Object</span>.prototype.toString.call(obj).slice(<span class="hljs-number">8</span>,<span class="hljs-number">-1</span>) === <span class="hljs-string">'Object'</span>;
 }
-<span class="hljs-built_in">module</span>.exports.isArray = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isArray</span>(<span class="hljs-params">obj</span>) </span>{
+<span class="hljs-keyword">const</span> isArray = <span class="hljs-built_in">module</span>.exports.isArray = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isArray</span>(<span class="hljs-params">obj</span>) </span>{
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">Array</span>.isArray(obj);
 }
-<span class="hljs-built_in">module</span>.exports.isElement = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isElement</span>(<span class="hljs-params">obj</span>)</span>{
+<span class="hljs-keyword">const</span> isElement = <span class="hljs-built_in">module</span>.exports.isElement = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isElement</span>(<span class="hljs-params">obj</span>)</span>{
     <span class="hljs-keyword">return</span> (
         <span class="hljs-keyword">typeof</span> HTMLElement === <span class="hljs-string">"object"</span>
             ? obj <span class="hljs-keyword">instanceof</span> HTMLElement
@@ -535,7 +531,7 @@ npm install jdom
                 &amp;&amp; <span class="hljs-keyword">typeof</span> obj.nodeName===<span class="hljs-string">"string"</span>
     );
 }
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">toCamelCase</span> (<span class="hljs-params">str</span>) </span>{
+<span class="hljs-keyword">const</span> toCamelCase = <span class="hljs-built_in">module</span>.exports.toCamelCase = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">toCamelCase</span>(<span class="hljs-params">str</span>) </span>{
     <span class="hljs-keyword">return</span> str.replace(<span class="hljs-regexp">/(?:^\w|[A-Z]|\b\w)/g</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">letter, index</span>) </span>{
         <span class="hljs-keyword">return</span> index === <span class="hljs-number">0</span> ? letter.toLowerCase() : letter.toUpperCase();
     }).replace(<span class="hljs-regexp">/\s+/g</span>, <span class="hljs-string">''</span>);
