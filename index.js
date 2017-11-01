@@ -311,7 +311,7 @@ const style = module.exports.style = function style(elem, props) {
 // * __isObject__ (_object_ __obj__)
 // * __isArray__ (_object_ __obj__)
 // * __isElement__ (_object_ __obj__)
-// * _private_ __toCamelCase__ (_string_ __str__)
+// * __toCamelCase__ (_string_ __str__)
 //
 const isObject = module.exports.isObject = function isObject(obj) {
     return Object.prototype.toString.call(obj).slice(8,-1) === 'Object';
@@ -329,7 +329,7 @@ const isElement = module.exports.isElement = function isElement(obj){
                 && typeof obj.nodeName==="string"
     );
 }
-function toCamelCase (str) {
+const toCamelCase = module.exports.toCamelCase = function toCamelCase(str) {
     return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
         return index === 0 ? letter.toLowerCase() : letter.toUpperCase();
     }).replace(/\s+/g, '');
