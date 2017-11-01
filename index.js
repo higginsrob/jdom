@@ -232,7 +232,7 @@ module.exports.ANIMATETRANSFORM = function ANIMATETRANSFORM(props) {
 // ```
 module.exports.id = id => document.getElementById(id);
 module.exports.$ = selector => document.querySelector(selector);
-module.exports.$$ = selector => document.querySelectorAll(selector);
+module.exports.$$ = selector => document.querySelectorAll;
 // ---
 // #### event management
 //
@@ -322,7 +322,7 @@ module.exports.isObject = function isObject(obj) {
 module.exports.isArray = function isArray(obj) {
     return Array.isArray(obj);
 }
-module.exports.isElement = function isElement(obj){
+const isElement = module.exports.isElement = function isElement(obj){
     return (
         typeof HTMLElement === "object"
             ? obj instanceof HTMLElement
