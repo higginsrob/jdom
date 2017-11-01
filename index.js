@@ -66,7 +66,7 @@ const createElement = module.exports = function createElement(tag, props, ns) {
             } else if (key === 'parent' && props.parent instanceof HTMLElement) {
                 props.parent.appendChild(elem);
             } else if (key === 'children') {
-                if (Array.isArray(props.children)) {
+                if (isArray(props.children)) {
                     props.children.forEach(function(child) {
                         if (child instanceof SVGElement || child instanceof HTMLElement) {
                             elem.appendChild(child);
@@ -305,9 +305,6 @@ const style = module.exports.style = function style(elem, props) {
         });
     }
 }
-module.exports.stop = id => {
-    delete animations[id];
-};
 // ---
 // ## utilities
 //
@@ -316,10 +313,10 @@ module.exports.stop = id => {
 // * __isElement__ (_object_ __obj__)
 // * _private_ __toCamelCase__ (_string_ __str__)
 //
-module.exports.isObject = function isObject(obj) {
+const isObject = module.exports.isObject = function isObject(obj) {
     return Object.prototype.toString.call(obj).slice(8,-1) === 'Object';
 }
-module.exports.isArray = function isArray(obj) {
+const isArray = module.exports.isArray = function isArray(obj) {
     return Array.isArray(obj);
 }
 const isElement = module.exports.isElement = function isElement(obj){
