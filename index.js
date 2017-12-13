@@ -156,6 +156,9 @@ module.exports.IMG = function IMG(props) {
 module.exports.VIDEO = function VIDEO(props) {
     return createElement('video', props);
 }
+module.exports.CANVAS = function CANVAS(props) {
+    return createElement('canvas', props);
+}
 module.exports.IFRAME = function IFRAME(props) {
     return createElement('iframe', props);
 }
