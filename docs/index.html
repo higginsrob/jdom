@@ -228,6 +228,9 @@
 <span class="hljs-built_in">module</span>.exports.VIDEO = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">VIDEO</span>(<span class="hljs-params">props</span>) </span>{
     <span class="hljs-keyword">return</span> createElement(<span class="hljs-string">'video'</span>, props);
 }
+<span class="hljs-built_in">module</span>.exports.CANVAS = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">CANVAS</span>(<span class="hljs-params">props</span>) </span>{
+    <span class="hljs-keyword">return</span> createElement(<span class="hljs-string">'canvas'</span>, props);
+}
 <span class="hljs-built_in">module</span>.exports.IFRAME = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">IFRAME</span>(<span class="hljs-params">props</span>) </span>{
     <span class="hljs-keyword">return</span> createElement(<span class="hljs-string">'iframe'</span>, props);
 }</pre></div></div>
@@ -338,14 +341,12 @@
               </div>
               <h4 id="aliases">aliases</h4>
 <h5 id="example">example</h5>
-<pre><code><span class="hljs-keyword">const</span> a = id(<span class="hljs-string">'a'</span>);
-<span class="hljs-keyword">const</span> b = $(<span class="hljs-string">'#b'</span>);
+<pre><code><span class="hljs-keyword">const</span> b = $(<span class="hljs-string">'#b'</span>);
 <span class="hljs-keyword">const</span> c = $$(<span class="hljs-string">'.c'</span>);
 </code></pre>
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">module</span>.exports.id = <span class="hljs-function"><span class="hljs-params">id</span> =&gt;</span> <span class="hljs-built_in">document</span>.getElementById(id);
-<span class="hljs-built_in">module</span>.exports.$ = <span class="hljs-function"><span class="hljs-params">selector</span> =&gt;</span> <span class="hljs-built_in">document</span>.querySelector(selector);
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">module</span>.exports.$ = <span class="hljs-function"><span class="hljs-params">selector</span> =&gt;</span> <span class="hljs-built_in">document</span>.querySelector(selector);
 <span class="hljs-built_in">module</span>.exports.$$ = <span class="hljs-function"><span class="hljs-params">selector</span> =&gt;</span> <span class="hljs-built_in">document</span>.querySelectorAll;</pre></div></div>
             
         </li>

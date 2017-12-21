@@ -184,7 +184,6 @@ import {SVG, RECT, CIRCLE} from 'jdom';
 
 ##### example
 ```
-const a = id('a');
 const b = $('#b');
 const c = $$('.c');
 ```

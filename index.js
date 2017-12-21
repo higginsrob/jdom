@@ -229,11 +229,9 @@ module.exports.ANIMATETRANSFORM = function ANIMATETRANSFORM(props) {
 //
 // ##### example
 // ```
-// const a = id('a');
 // const b = $('#b');
 // const c = $$('.c');
 // ```
-module.exports.id = id => document.getElementById(id);
 module.exports.$ = selector => document.querySelector(selector);
 module.exports.$$ = selector => document.querySelectorAll;
 // ---
