@@ -16,9 +16,7 @@
     "url": "https://github.com/higginsrob/jdom.git"
   },
   "devDependencies": {
+    "docco": "^0.8.0",
     "mocha": "^4.0.1"
-  },
-  "dependencies": {
-    "docco": "^0.7.0"
   }
 }
