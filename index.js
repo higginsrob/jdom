@@ -19,7 +19,7 @@
 // const {
 //    createElement, updateElement,
 //    DIV, SPAN, SCRIPT, STYLE, // ...etc
-//    id, $, $$,
+//    $, $$,
 //    on, once, off, dispatch,
 //    currentScript,
 //    style,
