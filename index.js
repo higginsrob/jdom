@@ -19,7 +19,6 @@
 // const {
 //    createElement, updateElement,
 //    DIV, SPAN, SCRIPT, STYLE, // ...etc
-//    $, $$,
 //    on, once, off, dispatch,
 //    currentScript,
 //    style,
@@ -153,6 +152,9 @@ module.exports.I = function I(props) {
 module.exports.IMG = function IMG(props) {
     return createElement('img', props);
 }
+module.exports.INPUT = function IMG(props) {
+    return createElement('input', props);
+}
 module.exports.VIDEO = function VIDEO(props) {
     return createElement('video', props);
 }
@@ -224,16 +226,6 @@ module.exports.ANIMATE = function ANIMATE(props) {
 module.exports.ANIMATETRANSFORM = function ANIMATETRANSFORM(props) {
     return createElement('animateTransform', props, defaultNameSpace);
 }
-// ---
-// #### aliases
-//
-// ##### example
-// ```
-// const b = $('#b');
-// const c = $$('.c');
-// ```
-module.exports.$ = selector => document.querySelector(selector);
-module.exports.$$ = selector => document.querySelectorAll;
 // ---
 // #### event management
 //
