@@ -155,6 +155,9 @@ module.exports.IMG = function IMG(props) {
 module.exports.INPUT = function IMG(props) {
     return createElement('input', props);
 }
+module.exports.BUTTON = function IMG(props) {
+    return createElement('button', props);
+}
 module.exports.VIDEO = function VIDEO(props) {
     return createElement('video', props);
 }
