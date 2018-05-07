@@ -29,7 +29,6 @@ _intended usage with webpack or browserify_
 const {
    createElement, updateElement,
    DIV, SPAN, SCRIPT, STYLE, // ...etc
-   $, $$,
    on, once, off, dispatch,
    currentScript,
    style,
@@ -167,26 +166,6 @@ import {SVG, RECT, CIRCLE} from 'jdom';
  });
 ```
 
-
-
-
-
-
-
----
-
-
-
-
-
-
-#### aliases
-
-##### example
-```
-const b = $('#b');
-const c = $$('.c');
-```
 
 
 
