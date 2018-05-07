@@ -167,6 +167,9 @@ module.exports.CANVAS = function CANVAS(props) {
 module.exports.IFRAME = function IFRAME(props) {
     return createElement('iframe', props);
 }
+module.exports.LABEL = function LABEL(props) {
+    return createElement('LABEL', props);
+}
 // ---
 // __SVG FACTORY METHODS__
 //
