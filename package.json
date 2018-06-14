@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "predocs": "docco -l plain-markdown -t README.jst -c node_modules/docco/resources/parallel/docco.css index.js",
-    "docs": "mv docs/index.html README.md",
-    "postdocs": "docco index.js",
+    "docs": "mv docs/index.html README.md && docco index.js",
+    "prepublish": "npm run docs",
     "test": "mocha test.js"
   },
   "author": "Rob Higgins <higginsrob@gmail.com>",
