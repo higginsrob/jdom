@@ -16,7 +16,7 @@
 // _intended usage with webpack or browserify_
 //
 // ```
-// const {
+// import {
 //    createElement, updateElement,
 //    DIV, SPAN, SCRIPT, STYLE, // ...etc
 //    on, once, off, dispatch,
