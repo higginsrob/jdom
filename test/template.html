@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="Content-Language" content="en">
+    </head>
+    <body>
+        <script>
+
+            const dom = jdom.factory;
+            const $ = jdom.$
+
+            function createElements () {
+                jdom.domElements.forEach(elem => {
+                    dom[elem]({
+                        parent: document.body,
+                        id: elem
+                    });
+                });
+                return jdom.domElements.every(elem => {
+                    return $('#' + elem).length === 1;
+                });
+            }
+
+            function updateElement () {
+                const div = dom.DIV({id: 'a'});
+                jdom.updateElement(div, {id: 'b'});
+                return div.id === 'b';
+            }
+
+            function setStyle () {
+                const div = dom.DIV({id: 'a'});
+                jdom.style(div, {
+                    color: 'red'
+                });
+                return div.style.color === 'red';
+            }
+
+            function createSvgElements () {
+                const svg = dom.svg();
+                jdom.svgElements.forEach(elem => {
+                    dom[elem]({
+                        parent: svg,
+                        id: elem
+                    });
+                });
+                return jdom.svgElements.every(elem => {
+                    return $('#' + elem, svg).length === 1;
+                });
+            }
+
+            let svg;
+
+            function createSvgDocument () {
+                svg = dom.svg({
+                    parent: document.body,
+                    width: 200,
+                    height: 100,
+                    children: [
+                        dom.RECT({
+                            x: 0,
+                            y: 0,
+                            width: 100,
+                            height: 100,
+                            fill: 'red'
+                        }),
+                        dom.RECT({
+                            x: 100,
+                            y: 0,
+                            width: 100,
+                            height: 100,
+                            fill: 'blue'
+                        }),
+                        dom.CIRCLE({
+                            cx: 100,
+                            cy: 50,
+                            r: 50,
+                            fill: 'green',
+                            'fill-opacity': 0.75,
+                            children: [
+                                dom.animateTransform({
+                                    attributeName: 'transform',
+                                    attributeType: 'XML',
+                                    type: 'scale',
+                                    from: '1',
+                                    to: '0.5',
+                                    dur: '3s',
+                                    repeatCount: 'indefinite'
+                                })
+                            ]
+                        })
+                    ]
+                });
+                return svg.childNodes.length === 3;
+            }
+
+            function updateSvgDocument() {
+                const $svg = $(svg);
+                $svg.style({border: '2px solid red'});
+                return svg.style.border === '2px solid red';
+            }
+
+            function removeSvgDocument() {
+                svg.remove();
+                delete svg;
+                return $('svg').length === 0;
+            }
+
+            function selector () {
+                const div = dom.DIV({
+                    id: 'a',
+                    parent: document.body
+                });
+                const $div = $('#a');
+                return $div[0].id === 'a';
+            }
+
+            function addClass () {
+                const div = dom.DIV({id: 'a'});
+                const $div = $('#a');
+                $div.addClass('myClass');
+                return $div.hasClass('myClass');
+            }
+
+            function removeClass () {
+                const div = dom.DIV({id: 'a', className: 'myClass'});
+                const $div = $('#a');
+                $div.removeClass('myClass');
+                return !$div.hasClass('myClass');
+            }
+
+        </script>
+    </body>
+</html>
+
