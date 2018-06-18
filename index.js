@@ -13,7 +13,7 @@
 //
 // #### usage
 //
-// _intended usage with webpack or browserify_
+// _intended usage with webpack_
 //
 // ```
 // import {
@@ -48,15 +48,26 @@
 //  });
 // ```
 //
-const createElement = module.exports = function createElement(tag, props, ns) {
+const factory = function (tag, props, ns) {
     if (!tag) {
         return;
     }
-    const elem = isElement(tag)
-        ? tag
-        : typeof ns === 'string'
-            ? document.createElementNS(ns, tag)
-            : document.createElement(tag);
+    let elem;
+    if (isElement(tag)){
+        elem = tag;
+    } else if (typeof tag === 'string') {
+        if (tag.charAt(0) === '<') {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(tag, 'text/html');
+            elem = doc.firstChild;
+        } else if (typeof ns === 'string') {
+            elem = document.createElementNS(ns, tag);
+        } else {
+            elem = document.createElement(tag);
+        }
+    } else {
+        throw new Error('invalid tag type: ' + typeof tag);
+    }
     if (isObject(props)) {
         Object.keys(props).forEach(function(key) {
             if (key === 'style') {
@@ -94,6 +105,38 @@ const createElement = module.exports = function createElement(tag, props, ns) {
     }
     return elem;
 };
+function setChildren(props, children) {
+    if (Array.isArray(children) && children.length) {
+        if (Array.isArray(props.children)) {
+            props.children = props.children.concat(children);
+        } else {
+            props.children = children;
+        }
+    }
+    return props;
+}
+const createElement = module.exports.createElement = (elem, props, ...children) => {
+    if (typeof elem === 'function') {
+        return factory(new elem(props), setChildren(props, children));
+    } else {
+        return factory(elem, setChildren(props, children));
+    }
+};
+const createElementNS = module.exports.factory = (ns, elem, props, ...children) => {
+    return factory(elem, setChildren(props, children), ns);
+};
+module.exports.Component = class Component {
+    constructor(tag, props, ...children) {
+        const scope = this;
+        scope.tag = tag;
+        scope.props = props;
+        scope.children = children;
+    }
+    render() {
+        const scope = this;
+        return createElement(scope.tag, scope.props, ...scope.children);
+    }
+};
 //
 // ---
 // __createSvgElement__ (_string_ __tag__, _object_ __props__);
@@ -111,11 +154,6 @@ const createElement = module.exports = function createElement(tag, props, ns) {
 //      ]
 //  });
 // ```
-//
-const defaultNameSpace = 'http://www.w3.org/2000/svg';
-const createSvgElement = module.exports = function createSvgElement(tag, props) {
-    return createElement(tag, props, defaultNameSpace);
-};
 // ---
 // __updateElement__ (_HTMLElement_ __elem__, _object_ __props__);
 //
@@ -270,14 +308,13 @@ const domElements = module.exports.domElements = [
     'slot',
     'template'
 ];
-const factory = module.exports.factory = {};
+const domFactory = module.exports.domFactory = {};
 domElements.forEach(elem => {
-    factory[elem] = function (props, ...children) {
-        return createElement(elem, setChildren(props || {}, children));
+    domFactory[elem] = function (props, ...children) {
+        return createElement(elem, props, ...children);
     };
-    factory[elem.toUpperCase()] = factory[elem];
+    domFactory[elem.toUpperCase()] = domFactory[elem];
 });
-
 // ---
 // __SVG FACTORY METHODS__
 //
@@ -313,6 +350,7 @@ domElements.forEach(elem => {
 //  });
 // ```
 //
+const defaultNameSpace = 'http://www.w3.org/2000/svg';
 const svgElements = module.exports.svgElements = [
     'a',
     'altGyph',
@@ -405,11 +443,12 @@ const svgElements = module.exports.svgElements = [
     'view',
     'vkern'
 ];
+const svgFactory = module.exports.svgFactory = {};
 svgElements.forEach(elem => {
-    factory[elem] = function (props, ...children) {
-        return createSvgElement(elem, setChildren(props || {}, children));
+    svgFactory[elem] = function (props, ...children) {
+        return createElementNS(defaultNameSpace, elem, props, ...children);
     };
-    factory[elem.toUpperCase()] = factory[elem];
+    svgFactory[elem.toUpperCase()] = svgFactory[elem];
 });
 // ---
 // #### event management
@@ -511,14 +550,19 @@ const QueryList = module.exports.QueryList = class QueryList {
         } else {
             const objectType = type(selector);
             if (objectType === 'String'){
-                if (!context) {
-                    context = document;
-                };
-                var nodelist = context.querySelectorAll(selector);
-                Array.prototype.forEach.call(nodelist, function(node, index){
-                    scope[index] = node;
-                });
-                scope.length = nodelist.length;
+                if (selector.charAt(0) === '<') {
+                    scope[0] = createElement(selector);
+                    scope.length = 1;
+                } else {
+                    if (!context) {
+                        context = document;
+                    };
+                    var nodelist = context.querySelectorAll(selector);
+                    Array.prototype.forEach.call(nodelist, function(node, index){
+                        scope[index] = node;
+                    });
+                    scope.length = nodelist.length;
+                }
             } else if (objectType === 'NodeList' || objectType === 'HTMLCollection'){
                 Array.prototype.forEach.call(selector, function(node, index){
                     scope[index] = node;
@@ -628,7 +672,6 @@ module.exports.$ = function (selector, context) {
 // * __isArray__ (_object_ __obj__)
 // * __isElement__ (_object_ __obj__)
 // * __toCamelCase__ (_string_ __str__)
-// * __setChildren (_object_ _obj_, _array_ _children_))
 //
 const type = module.exports.type = function(obj) {
     return Object.prototype.toString.call(obj).slice(8,-1);
@@ -668,11 +711,4 @@ const toCamelCase = module.exports.toCamelCase = function(str) {
         return index === 0 ? letter.toLowerCase() : letter.toUpperCase();
     }).replace(/\s+/g, '');
 };
-const setChildren = module.exports.setChildren = function(props, children) {
-    if (Array.isArray(children) && Array.isArray(props.children)) {
-        props.children = props.children.concat(children);
-    } else if (Array.isArray(children)) {
-        props.children = children;
-    }
-    return props;
-};
+

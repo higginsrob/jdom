@@ -320,6 +320,15 @@ __QueryList ($)__ (_string_/_element_/_nodelist_/_array_/_function_ __selector__
 
 
 
+const parser = new DOMParser();
+const doc = parser.parseFromString(selector, 'text/html');
+scope[0] = doc.firstChild;
+
+
+
+
+
+
 ## utilities
 
 * __type (_object_ __obj__)

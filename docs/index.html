@@ -5,7 +5,7 @@
   <title>JDOM.js</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
-  <link rel="stylesheet" media="all" href="docco.css" />
+  <link rel="stylesheet" media="all" href="style.css" />
 </head>
 <body>
   <div id="container">
@@ -39,7 +39,7 @@
               <h5 id="installation">installation</h5>
 <pre><code>npm install jdom
 </code></pre><h4 id="usage">usage</h4>
-<p><em>intended usage with webpack or browserify</em></p>
+<p><em>intended usage with webpack</em></p>
 <pre><code><span class="hljs-keyword">import</span> {
    createElement, updateElement,
    DIV, SPAN, SCRIPT, STYLE, <span class="hljs-comment">// ...etc</span>
@@ -80,15 +80,27 @@
 </code></pre>
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> createElement = <span class="hljs-built_in">module</span>.exports = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createElement</span>(<span class="hljs-params">tag, props, ns</span>) </span>{
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> factory = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">tag, props, ns</span>) </span>{
+    <span class="hljs-built_in">console</span>.log(tag, props, ns);
     <span class="hljs-keyword">if</span> (!tag) {
         <span class="hljs-keyword">return</span>;
     }
-    <span class="hljs-keyword">const</span> elem = isElement(tag)
-        ? tag
-        : <span class="hljs-keyword">typeof</span> ns === <span class="hljs-string">'string'</span>
-            ? <span class="hljs-built_in">document</span>.createElementNS(ns, tag)
-            : <span class="hljs-built_in">document</span>.createElement(tag);
+    <span class="hljs-keyword">let</span> elem;
+    <span class="hljs-keyword">if</span> (isElement(tag)){
+        elem = tag;
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> tag === <span class="hljs-string">'string'</span>) {
+        <span class="hljs-keyword">if</span> (tag.charAt(<span class="hljs-number">0</span>) === <span class="hljs-string">'&lt;'</span>) {
+            <span class="hljs-keyword">const</span> parser = <span class="hljs-keyword">new</span> DOMParser();
+            <span class="hljs-keyword">const</span> doc = parser.parseFromString(tag, <span class="hljs-string">'text/html'</span>);
+            elem = doc.firstChild;
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> ns === <span class="hljs-string">'string'</span>) {
+            elem = <span class="hljs-built_in">document</span>.createElementNS(ns, tag);
+        } <span class="hljs-keyword">else</span> {
+            elem = <span class="hljs-built_in">document</span>.createElement(tag);
+        }
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'invalid tag type: '</span> + <span class="hljs-keyword">typeof</span> tag);
+    }
     <span class="hljs-keyword">if</span> (isObject(props)) {
         <span class="hljs-built_in">Object</span>.keys(props).forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">key</span>) </span>{
             <span class="hljs-keyword">if</span> (key === <span class="hljs-string">'style'</span>) {
@@ -125,6 +137,22 @@
         elem.innerHTML = props;
     }
     <span class="hljs-keyword">return</span> elem;
+};
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setChildren</span>(<span class="hljs-params">props, children</span>) </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(children) &amp;&amp; children.length) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(props.children)) {
+            props.children = props.children.concat(children);
+        } <span class="hljs-keyword">else</span> {
+            props.children = children;
+        }
+    }
+    <span class="hljs-keyword">return</span> props;
+}
+<span class="hljs-keyword">const</span> createElement = <span class="hljs-built_in">module</span>.exports.createElement = <span class="hljs-function">(<span class="hljs-params">elem, props, ...children</span>) =&gt;</span> {
+    <span class="hljs-keyword">return</span> factory(elem, setChildren(props, children));
+};
+<span class="hljs-keyword">const</span> createElementNS = <span class="hljs-built_in">module</span>.exports.factory = <span class="hljs-function">(<span class="hljs-params">ns, elem, props, ...children</span>) =&gt;</span> {
+    <span class="hljs-keyword">return</span> factory(elem, setChildren(props, children), ns);
 };</pre></div></div>
             
         </li>
@@ -160,13 +188,9 @@
          })
      ]
  });
-</code></pre>
+</code></pre><hr>
+
             </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> defaultNameSpace = <span class="hljs-string">'http://www.w3.org/2000/svg'</span>;
-<span class="hljs-keyword">const</span> createSvgElement = <span class="hljs-built_in">module</span>.exports = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createSvgElement</span>(<span class="hljs-params">tag, props</span>) </span>{
-    <span class="hljs-keyword">return</span> createElement(tag, props, defaultNameSpace);
-};</pre></div></div>
             
         </li>
         
@@ -176,19 +200,6 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <hr>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p><strong>updateElement</strong> (<em>HTMLElement</em> <strong>elem</strong>, <em>object</em> <strong>props</strong>);</p>
 <p><em>update dom elements</em></p>
@@ -207,11 +218,11 @@
         </li>
         
         
-        <li id="section-8">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <hr>
 
@@ -220,11 +231,11 @@
         </li>
         
         
-        <li id="section-9">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <p><strong>DOM FACTORY METHODS</strong></p>
 <p><em>syntactic sugar</em></p>
@@ -361,13 +372,26 @@
     <span class="hljs-string">'slot'</span>,
     <span class="hljs-string">'template'</span>
 ];
-<span class="hljs-keyword">const</span> factory = <span class="hljs-built_in">module</span>.exports.factory = {};
+<span class="hljs-keyword">const</span> domFactory = <span class="hljs-built_in">module</span>.exports.domFactory = {};
 domElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</span> =&gt;</span> {
-    factory[elem] = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">props, ...children</span>) </span>{
-        <span class="hljs-keyword">return</span> createElement(elem, setChildren(props || {}, children));
+    domFactory[elem] = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">props, ...children</span>) </span>{
+        <span class="hljs-keyword">return</span> createElement(elem, props, ...children);
     };
-    factory[elem.toUpperCase()] = factory[elem];
+    domFactory[elem.toUpperCase()] = domFactory[elem];
 });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <hr>
+
+            </div>
             
         </li>
         
@@ -377,19 +401,6 @@ domElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
-              </div>
-              <hr>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-11">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <p><strong>SVG FACTORY METHODS</strong></p>
 <p><em>syntactic sugar</em></p>
@@ -422,7 +433,8 @@ domElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
 </code></pre>
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> svgElements = <span class="hljs-built_in">module</span>.exports.svgElements = [
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> defaultNameSpace = <span class="hljs-string">'http://www.w3.org/2000/svg'</span>;
+<span class="hljs-keyword">const</span> svgElements = <span class="hljs-built_in">module</span>.exports.svgElements = [
     <span class="hljs-string">'a'</span>,
     <span class="hljs-string">'altGyph'</span>,
     <span class="hljs-string">'altGlyphDef'</span>,
@@ -514,12 +526,26 @@ domElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
     <span class="hljs-string">'view'</span>,
     <span class="hljs-string">'vkern'</span>
 ];
+<span class="hljs-keyword">const</span> svgFactory = <span class="hljs-built_in">module</span>.exports.svgFactory = {};
 svgElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</span> =&gt;</span> {
-    factory[elem] = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">props, ...children</span>) </span>{
-        <span class="hljs-keyword">return</span> createSvgElement(elem, setChildren(props || {}, children));
+    svgFactory[elem] = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">props, ...children</span>) </span>{
+        <span class="hljs-keyword">return</span> createElementNS(defaultNameSpace, elem, props, ...children);
     };
-    factory[elem.toUpperCase()] = factory[elem];
+    svgFactory[elem.toUpperCase()] = svgFactory[elem];
 });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <hr>
+
+            </div>
             
         </li>
         
@@ -529,19 +555,6 @@ svgElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
-              </div>
-              <hr>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-13">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <h4 id="event-management">event management</h4>
 <ul>
@@ -582,11 +595,11 @@ svgElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
         </li>
         
         
-        <li id="section-14">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <hr>
 
@@ -595,11 +608,11 @@ svgElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
         </li>
         
         
-        <li id="section-15">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p><strong>currentScript</strong> ()</p>
 <p><em>get the currently executing script</em></p>
@@ -620,11 +633,11 @@ svgElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
         </li>
         
         
-        <li id="section-16">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <hr>
 
@@ -633,11 +646,11 @@ svgElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
         </li>
         
         
-        <li id="section-17">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <p><strong>style</strong> (<em>HTMLElement</em> <strong>elem</strong>, <em>object</em> <strong>props</strong>)</p>
 <p><em>update element style</em></p>
@@ -661,11 +674,11 @@ svgElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
         </li>
         
         
-        <li id="section-18">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <hr>
 
@@ -674,11 +687,11 @@ svgElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
         </li>
         
         
-        <li id="section-19">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p><strong>QueryList ($)</strong> (<em>string</em>/<em>element</em>/<em>nodelist</em>/<em>array</em>/<em>function</em> <strong>selector</strong>)</p>
 <h5 id="example">example</h5>
@@ -704,14 +717,19 @@ svgElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
         } <span class="hljs-keyword">else</span> {
             <span class="hljs-keyword">const</span> objectType = type(selector);
             <span class="hljs-keyword">if</span> (objectType === <span class="hljs-string">'String'</span>){
-                <span class="hljs-keyword">if</span> (!context) {
-                    context = <span class="hljs-built_in">document</span>;
-                };
-                <span class="hljs-keyword">var</span> nodelist = context.querySelectorAll(selector);
-                <span class="hljs-built_in">Array</span>.prototype.forEach.call(nodelist, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">node, index</span>)</span>{
-                    scope[index] = node;
-                });
-                scope.length = nodelist.length;
+                <span class="hljs-keyword">if</span> (selector.charAt(<span class="hljs-number">0</span>) === <span class="hljs-string">'&lt;'</span>) {
+                    scope[<span class="hljs-number">0</span>] = createElement(selector);
+                    scope.length = <span class="hljs-number">1</span>;
+                } <span class="hljs-keyword">else</span> {
+                    <span class="hljs-keyword">if</span> (!context) {
+                        context = <span class="hljs-built_in">document</span>;
+                    };
+                    <span class="hljs-keyword">var</span> nodelist = context.querySelectorAll(selector);
+                    <span class="hljs-built_in">Array</span>.prototype.forEach.call(nodelist, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">node, index</span>)</span>{
+                        scope[index] = node;
+                    });
+                    scope.length = nodelist.length;
+                }
             } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (objectType === <span class="hljs-string">'NodeList'</span> || objectType === <span class="hljs-string">'HTMLCollection'</span>){
                 <span class="hljs-built_in">Array</span>.prototype.forEach.call(selector, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">node, index</span>)</span>{
                     scope[index] = node;
@@ -816,11 +834,11 @@ QueryList.prototype.unshift = <span class="hljs-built_in">Array</span>.prototype
         </li>
         
         
-        <li id="section-20">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <h2 id="utilities">utilities</h2>
 <ul>
@@ -833,7 +851,6 @@ QueryList.prototype.unshift = <span class="hljs-built_in">Array</span>.prototype
 <li><strong>isArray</strong> (<em>object</em> <strong>obj</strong>)</li>
 <li><strong>isElement</strong> (<em>object</em> <strong>obj</strong>)</li>
 <li><strong>toCamelCase</strong> (<em>string</em> <strong>str</strong>)</li>
-<li>__setChildren (<em>object</em> <em>obj</em>, <em>array</em> <em>children</em>))</li>
 </ul>
 
             </div>
@@ -875,14 +892,6 @@ QueryList.prototype.unshift = <span class="hljs-built_in">Array</span>.prototype
     <span class="hljs-keyword">return</span> str.replace(<span class="hljs-regexp">/(?:^\w|[A-Z]|\b\w)/g</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">letter, index</span>) </span>{
         <span class="hljs-keyword">return</span> index === <span class="hljs-number">0</span> ? letter.toLowerCase() : letter.toUpperCase();
     }).replace(<span class="hljs-regexp">/\s+/g</span>, <span class="hljs-string">''</span>);
-};
-<span class="hljs-keyword">const</span> setChildren = <span class="hljs-built_in">module</span>.exports.setChildren = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">props, children</span>) </span>{
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(children) &amp;&amp; <span class="hljs-built_in">Array</span>.isArray(props.children)) {
-        props.children = props.children.concat(children);
-    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(children)) {
-        props.children = children;
-    }
-    <span class="hljs-keyword">return</span> props;
 };</pre></div></div>
             
         </li>
