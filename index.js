@@ -48,12 +48,12 @@
 //  });
 // ```
 //
-const factory = function (tag, props, ns) {
+const factory = function(tag, props, ns) {
     if (!tag) {
         return;
     }
     let elem;
-    if (isElement(tag)){
+    if (isElement(tag)) {
         elem = tag;
     } else if (typeof tag === 'string') {
         if (tag.charAt(0) === '<') {
@@ -75,8 +75,8 @@ const factory = function (tag, props, ns) {
                     style(elem, props.style);
                 }
             } else if (key === 'dataset') {
-                if (isObject(props.dataset)){
-                    Object.keys(props.dataset).forEach((key) => {
+                if (isObject(props.dataset)) {
+                    Object.keys(props.dataset).forEach(key => {
                         elem.dataset[key] = props.dataset[key];
                     });
                 }
@@ -115,16 +115,25 @@ function setChildren(props, children) {
     }
     return props;
 }
-const createElement = module.exports.createElement = (elem, props, ...children) => {
+const createElement = (module.exports.createElement = (
+    elem,
+    props,
+    ...children
+) => {
     if (typeof elem === 'function') {
         return factory(new elem(props), setChildren(props, children));
     } else {
         return factory(elem, setChildren(props, children));
     }
-};
-const createElementNS = module.exports.factory = (ns, elem, props, ...children) => {
+});
+const createElementNS = (module.exports.factory = (
+    ns,
+    elem,
+    props,
+    ...children
+) => {
     return factory(elem, setChildren(props, children), ns);
-};
+});
 module.exports.Component = class Component {
     constructor(tag, props, ...children) {
         const scope = this;
@@ -194,7 +203,7 @@ module.exports.updateElement = createElement;
 //  SPAN({parent: div, children: ['!!!!']);
 // ```
 
-const domElements = module.exports.domElements = [
+const domElements = (module.exports.domElements = [
     'link',
     'meta',
     'style',
@@ -204,8 +213,12 @@ const domElements = module.exports.domElements = [
     'aside',
     'footer',
     'header',
-    'h1','h2','h3',
-    'h4','h5','h6',
+    'h1',
+    'h2',
+    'h3',
+    'h4',
+    'h5',
+    'h6',
     'hgroup',
     'nav',
     'section',
@@ -306,14 +319,15 @@ const domElements = module.exports.domElements = [
     'element',
     'shadow',
     'slot',
-    'template'
-];
-const domFactory = module.exports.domFactory = {};
+    'template',
+]);
+const domFactory = (module.exports.domFactory = {});
 domElements.forEach(elem => {
-    domFactory[elem] = function (props, ...children) {
+    domFactory[elem] = function(props, ...children) {
         return createElement(elem, props, ...children);
     };
     domFactory[elem.toUpperCase()] = domFactory[elem];
+    domFactory[elem.toLowerCase()] = domFactory[elem];
 });
 // ---
 // __SVG FACTORY METHODS__
@@ -351,7 +365,7 @@ domElements.forEach(elem => {
 // ```
 //
 const defaultNameSpace = 'http://www.w3.org/2000/svg';
-const svgElements = module.exports.svgElements = [
+const svgElements = (module.exports.svgElements = [
     'a',
     'altGyph',
     'altGlyphDef',
@@ -441,14 +455,16 @@ const svgElements = module.exports.svgElements = [
     'unknown',
     'use',
     'view',
-    'vkern'
-];
-const svgFactory = module.exports.svgFactory = {};
+    'vkern',
+]);
+const svgFactory = (module.exports.svgFactory = {});
 svgElements.forEach(elem => {
-    svgFactory[elem] = function (props, ...children) {
+    svgFactory[elem] = function(props, ...children) {
         return createElementNS(defaultNameSpace, elem, props, ...children);
     };
+    svgFactory[elem] = svgFactory[elem];
     svgFactory[elem.toUpperCase()] = svgFactory[elem];
+    svgFactory[elem.toLowerCase()] = svgFactory[elem];
 });
 // ---
 // #### event management
@@ -463,28 +479,38 @@ svgElements.forEach(elem => {
 //  const a = document.getElementById('aDiv');
 //  const mouseover = () => {
 //      a.style.backgroundColor = 'red';
+//      console.log('mouseover');
 //  }
+//
 //  on(a, 'mouseover', mouseover);
+//
 //  once(a, 'click', () => {
 //      off(a, 'mouseover', mouseover);
+//      console.log('silenced mouseover');
 //  });
+//
+//  //simulate click after 5 seconds
 //  window.setTimeout(() => {
 //      dispatch(a, 'click');
-//  }, 2000);
+//  }, 10000);
 // ```
-const on = module.exports.on = (element, event, handler, options) => {
+const on = (module.exports.on = (element, event, handler, options) => {
     element.addEventListener(event, handler, options);
-};
-const once = module.exports.once = (element, event, handler, options) => {
-    element.addEventListener(event, handler, Object.assign({once: true}, options));
-};
-const off = module.exports.off = (element, event, handler, options) => {
+});
+const once = (module.exports.once = (element, event, handler, options) => {
+    element.addEventListener(
+        event,
+        handler,
+        Object.assign({once: true}, options),
+    );
+});
+const off = (module.exports.off = (element, event, handler, options) => {
     element.removeEventListener(event, handler, options);
-};
-const dispatch = module.exports.dispatch = (elem, event) => {
+});
+const dispatch = (module.exports.dispatch = (elem, event) => {
     const evt = new Event(event);
     elem.dispatchEvent(evt);
-};
+});
 // ---
 // __currentScript__ ()
 //
@@ -517,13 +543,13 @@ module.exports.currentScript = function currentScript() {
 //  })
 // ```
 //
-const style = module.exports.style = (elem, props) => {
-    if (isElement(elem) && isObject(props)){
-        Object.keys(props).forEach((key) => {
+const style = (module.exports.style = (elem, props) => {
+    if (isElement(elem) && isObject(props)) {
+        Object.keys(props).forEach(key => {
             elem.style[key] = props[key];
         });
     }
-};
+});
 // ---
 // __QueryList ($)__ (_string_/_element_/_nodelist_/_array_/_function_ __selector__)
 //
@@ -540,45 +566,54 @@ const style = module.exports.style = (elem, props) => {
 //  $a.dispatch('click');
 // ```
 //
-const QueryList = module.exports.QueryList = class QueryList {
+const QueryList = (module.exports.QueryList = class QueryList {
     constructor(selector, context) {
         var scope = this;
         scope.length = 0;
-        if (isElement(selector)){
+        if (isElement(selector)) {
             scope[0] = selector;
             scope.length = 1;
         } else {
             const objectType = type(selector);
-            if (objectType === 'String'){
+            if (objectType === 'String') {
                 if (selector.charAt(0) === '<') {
                     scope[0] = createElement(selector);
                     scope.length = 1;
                 } else {
                     if (!context) {
                         context = document;
-                    };
+                    }
                     var nodelist = context.querySelectorAll(selector);
-                    Array.prototype.forEach.call(nodelist, function(node, index){
+                    Array.prototype.forEach.call(nodelist, function(
+                        node,
+                        index,
+                    ) {
                         scope[index] = node;
                     });
                     scope.length = nodelist.length;
                 }
-            } else if (objectType === 'NodeList' || objectType === 'HTMLCollection'){
-                Array.prototype.forEach.call(selector, function(node, index){
+            } else if (
+                objectType === 'NodeList' ||
+                objectType === 'HTMLCollection'
+            ) {
+                Array.prototype.forEach.call(selector, function(node, index) {
                     scope[index] = node;
                 });
                 scope.length = selector.length;
-            } else if (objectType === 'Array' || selector instanceof QueryList){
+            } else if (
+                objectType === 'Array' ||
+                selector instanceof QueryList
+            ) {
                 var index = 0;
-                selector.forEach(function(node){
-                    if (isElement(node)){
+                selector.forEach(function(node) {
+                    if (isElement(node)) {
                         scope[index] = node;
                         index++;
                     }
                 });
                 scope.length = index;
-            } else if (objectType === 'Function'){
-                if (document.readyState === 'complete'){
+            } else if (objectType === 'Function') {
+                if (document.readyState === 'complete') {
                     selector();
                 } else {
                     var ready = window.setInterval(function() {
@@ -589,7 +624,9 @@ const QueryList = module.exports.QueryList = class QueryList {
                     }, 10);
                 }
             } else {
-                throw new Error('QueryList: invalid selector type: ' + objectType);
+                throw new Error(
+                    'QueryList: invalid selector type: ' + objectType,
+                );
             }
         }
         return scope;
@@ -649,7 +686,7 @@ const QueryList = module.exports.QueryList = class QueryList {
         });
         return scope;
     }
-};
+});
 QueryList.prototype.filter = Array.prototype.filter;
 QueryList.prototype.forEach = Array.prototype.forEach;
 QueryList.prototype.map = Array.prototype.map;
@@ -660,7 +697,7 @@ QueryList.prototype.slice = Array.prototype.slice;
 QueryList.prototype.some = Array.prototype.some;
 QueryList.prototype.splice = Array.prototype.splice;
 QueryList.prototype.unshift = Array.prototype.unshift;
-module.exports.$ = function (selector, context) {
+module.exports.$ = function(selector, context) {
     return new QueryList(selector, context);
 };
 // ## utilities
@@ -673,42 +710,53 @@ module.exports.$ = function (selector, context) {
 // * __isElement__ (_object_ __obj__)
 // * __toCamelCase__ (_string_ __str__)
 //
-const type = module.exports.type = function(obj) {
-    return Object.prototype.toString.call(obj).slice(8,-1);
-};
-const isObject = module.exports.isObject = function isObject(obj) {
+const type = (module.exports.type = function(obj) {
+    return Object.prototype.toString.call(obj).slice(8, -1);
+});
+const isObject = (module.exports.isObject = function isObject(obj) {
     return type(obj) === 'Object';
-};
-const isArray = module.exports.isArray = function isArray(obj) {
+});
+const isArray = (module.exports.isArray = function isArray(obj) {
     return Array.isArray(obj);
-};
-const isElement = module.exports.isElement = function isElement(obj){
+});
+const isElement = (module.exports.isElement = function isElement(obj) {
     return obj instanceof SVGElement || obj instanceof HTMLElement;
-};
-const hasClass = module.exports.hasClass = function(elem, className) {
+});
+const hasClass = (module.exports.hasClass = function(elem, className) {
     if (isElement(elem) && typeof className === 'string') {
-        return new RegExp('(\\s|^)'+ className +'(\\s|$)').test(elem.className);
+        return new RegExp('(\\s|^)' + className + '(\\s|$)').test(
+            elem.className,
+        );
     }
-};
-const addClass = module.exports.addClass = function(elem, className) {
+});
+const addClass = (module.exports.addClass = function(elem, className) {
     if (isElement(elem) && typeof className === 'string') {
-        if (new RegExp('(\\s|^)'+ className +'(\\s|$)').test(elem.className) !== true){
+        if (
+            new RegExp('(\\s|^)' + className + '(\\s|$)').test(
+                elem.className,
+            ) !== true
+        ) {
             elem.className += (elem.className ? ' ' : '') + className;
         }
     }
     return this;
-};
-const removeClass = module.exports.addClass = function(elem, className) {
+});
+const removeClass = (module.exports.addClass = function(elem, className) {
     if (isElement(elem) && typeof className === 'string') {
-        if (new RegExp('(\\s|^)'+ className +'(\\s|$)').test(elem.className)){
-            elem.className = elem.className.replace(new RegExp('(\\s|^)'+ className +'(\\s|$)'),' ').replace(/^\s+|\s+$/g, '');
+        if (
+            new RegExp('(\\s|^)' + className + '(\\s|$)').test(elem.className)
+        ) {
+            elem.className = elem.className
+                .replace(new RegExp('(\\s|^)' + className + '(\\s|$)'), ' ')
+                .replace(/^\s+|\s+$/g, '');
         }
     }
     return this;
-};
-const toCamelCase = module.exports.toCamelCase = function(str) {
-    return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
-        return index === 0 ? letter.toLowerCase() : letter.toUpperCase();
-    }).replace(/\s+/g, '');
-};
-
+});
+const toCamelCase = (module.exports.toCamelCase = function(str) {
+    return str
+        .replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
+            return index === 0 ? letter.toLowerCase() : letter.toUpperCase();
+        })
+        .replace(/\s+/g, '');
+});

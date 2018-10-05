@@ -1,33 +1,33 @@
 {
-  "name": "jdom",
-  "version": "3.0.0",
-  "description": "lightweight dom builder",
-  "main": "index.js",
-  "scripts": {
-    "docs": "docco -c style.css index.js",
-    "prepublish": "npm run docs",
-    "start": "webpack-dev-server",
-    "test": "mocha test"
-  },
-  "author": "Rob Higgins <higginsrob@gmail.com>",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/higginsrob/jdom.git"
-  },
-  "devDependencies": {
-    "docco": "^0.8.0",
-    "eslint": "^4.19.1",
-    "eslint-loader": "^2.0.0",
-    "git-hooks": "^1.1.10",
-    "html-webpack-plugin": "^3.2.0",
-    "mocha": "^4.0.1",
-    "webpack": "^4.12.0",
-    "webpack-cli": "^3.0.6",
-    "webpack-dev-server": "^3.1.4"
-  },
-  "dependencies": {
-    "save-dev": "^2.0.0",
-    "zombie": "^6.1.2"
-  }
+    "name": "jdom",
+    "version": "3.0.1",
+    "description": "lightweight dom builder",
+    "main": "index.js",
+    "scripts": {
+        "docs": "docco -c style.css index.js",
+        "prepublish": "npm run docs",
+        "start": "webpack-dev-server",
+        "test": "mocha test"
+    },
+    "author": "Rob Higgins <higginsrob@gmail.com>",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/higginsrob/jdom.git"
+    },
+    "devDependencies": {
+        "docco": "^0.8.0",
+        "eslint": "^4.19.1",
+        "eslint-loader": "^2.0.0",
+        "git-hooks": "^1.1.10",
+        "html-webpack-plugin": "^3.2.0",
+        "mocha": "^4.0.1",
+        "webpack": "^4.12.0",
+        "webpack-cli": "^3.0.6",
+        "webpack-dev-server": "^3.1.4"
+    },
+    "dependencies": {
+        "save-dev": "^2.0.0",
+        "zombie": "^6.1.2"
+    }
 }
