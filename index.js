@@ -672,7 +672,7 @@ const QueryList = (module.exports.QueryList = class QueryList {
         return scope;
     }
     hasClass(str, strict) {
-        const arrFun = !!strict ? 'every' : 'some';
+        const arrFun = !strict ? 'some' : 'every';
         return this[arrFun](elem => {
             return hasClass(elem, str);
         });
