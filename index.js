@@ -527,7 +527,12 @@ module.exports.currentScript = function currentScript() {
         return document.currentScript;
     }
     const scripts = document.getElementsByTagName('script');
-    return scripts[scripts.length - 1];
+    for (var i = scripts.length - 1; i >= 0; i--) {
+        const script = scripts[i];
+        if (script.src) {
+            return script;
+        }
+    }
 };
 // ---
 // __style__ (_HTMLElement_ __elem__, _object_ __props__)
