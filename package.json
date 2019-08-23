@@ -6,6 +6,7 @@
     "scripts": {
         "docs": "docco -c style.css index.js",
         "prepublish": "npm run docs",
+        "prettier": "prettier --loglevel=error --write '**/*.js' '**/*.json' '**/*.jsx' '**/*.css' '**/*.md'",
         "start": "webpack-dev-server",
         "test": "mocha test"
     },
@@ -15,19 +16,29 @@
         "type": "git",
         "url": "https://github.com/higginsrob/jdom.git"
     },
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged"
+        }
+    },
+    "lint-staged": {
+        "*.{js,jsx,json,css,md}": [
+            "prettier --write",
+            "git add"
+        ],
+        "*": "npm run docs"
+    },
     "devDependencies": {
         "docco": "^0.8.0",
         "eslint": "^4.19.1",
         "eslint-loader": "^2.0.0",
-        "git-hooks": "^1.1.10",
         "html-webpack-plugin": "^3.2.0",
+        "husky": "^3.0.4",
+        "lint-staged": "^9.2.3",
         "mocha": "^4.0.1",
+        "prettier": "^1.18.2",
         "webpack": "^4.12.0",
         "webpack-cli": "^3.0.6",
         "webpack-dev-server": "^3.1.4"
-    },
-    "dependencies": {
-        "save-dev": "^2.0.0",
-        "zombie": "^6.1.2"
     }
 }

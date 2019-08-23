@@ -8,14 +8,14 @@ const isProduction = false;
 const config = {
     mode: isProduction ? 'production' : 'development',
     entry: {
-        jdom: path.join(context, 'index.js')
+        jdom: path.join(context, 'index.js'),
     },
     output: {
         path: build,
         filename: '[name].js',
         chunkFilename: '[name].js',
         library: ['jdom'],
-        libraryTarget: 'umd'
+        libraryTarget: 'umd',
     },
     module: {
         rules: [
@@ -23,15 +23,13 @@ const config = {
                 test: /\.js$/,
                 enforce: 'pre',
                 include: path.join(context, 'index.js'),
-                use: ['eslint-loader']
-            }
-        ]
+                use: ['eslint-loader'],
+            },
+        ],
     },
     resolve: {
-        modules: [
-            'node_modules'
-        ],
-        extensions: ['.js']
+        modules: ['node_modules'],
+        extensions: ['.js'],
     },
     devtool: !isProduction && 'source-map',
     context,
@@ -41,7 +39,7 @@ const config = {
         chunks: false,
         modules: false,
         children: false,
-        warnings: false
+        warnings: false,
     },
     devServer: {
         contentBase: build,
@@ -50,16 +48,15 @@ const config = {
             colors: true,
             chunks: false,
             modules: false,
-            children: false
-        }
+            children: false,
+        },
     },
     plugins: [
         new HtmlWebpackPlugin({
             inject: 'head',
-            template: path.join(context, 'test', 'template.html')
-        })
-    ]
+            template: path.join(context, 'test', 'template.html'),
+        }),
+    ],
 };
 
 module.exports = config;
-
