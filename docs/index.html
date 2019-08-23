@@ -21,7 +21,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <h1 id="jdom-js">JDOM.js</h1>
+              <h1 id="jdomjs">JDOM.js</h1>
 <p><em>lightweight dom builder</em></p>
 <hr>
 
@@ -47,8 +47,7 @@
    currentScript,
    style,
    isObject, isArray, isElement
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'jdom'</span>;
-</code></pre><hr>
+} <span class="hljs-keyword">from</span> <span class="hljs-string">'jdom'</span>;</code></pre><hr>
 
             </div>
             
@@ -76,8 +75,7 @@
      <span class="hljs-attr">click</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
          container.style.color = <span class="hljs-string">'blue'</span>;
      }
- });
-</code></pre>
+ });</code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> factory = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">tag, props, ns</span>) </span>{
@@ -211,8 +209,7 @@
              <span class="hljs-attr">d</span>: <span class="hljs-string">'M10 10'</span>
          })
      ]
- });
-</code></pre><hr>
+ });</code></pre><hr>
 
             </div>
             
@@ -233,8 +230,7 @@
      <span class="hljs-attr">style</span>: {
          <span class="hljs-attr">color</span>: <span class="hljs-string">'blue'</span>
      }
- })
-</code></pre>
+ })</code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-built_in">module</span>.exports.updateElement = createElement;</pre></div></div>
@@ -277,8 +273,7 @@
      <span class="hljs-attr">parent</span>: <span class="hljs-built_in">document</span>.body
  });
 
- SPAN({<span class="hljs-attr">parent</span>: div, <span class="hljs-attr">children</span>: [<span class="hljs-string">'!!!!'</span>]);
-</code></pre>
+ SPAN({<span class="hljs-attr">parent</span>: div, <span class="hljs-attr">children</span>: [<span class="hljs-string">'!!!!'</span>]);</code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre>
@@ -458,8 +453,7 @@ domElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
          })
      ],
      <span class="hljs-attr">parent</span>: <span class="hljs-built_in">document</span>.body
- });
-</code></pre>
+ });</code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> defaultNameSpace = <span class="hljs-string">'http://www.w3.org/2000/svg'</span>;
@@ -611,8 +605,7 @@ svgElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
  <span class="hljs-comment">//simulate click after 5 seconds</span>
  <span class="hljs-built_in">window</span>.setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
      dispatch(a, <span class="hljs-string">'click'</span>);
- }, <span class="hljs-number">10000</span>);
-</code></pre>
+ }, <span class="hljs-number">10000</span>);</code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> on = <span class="hljs-function">(<span class="hljs-params"><span class="hljs-built_in">module</span>.exports.on = (element, event, handler, options</span>) =&gt;</span> {
@@ -622,7 +615,7 @@ svgElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
     element.addEventListener(
         event,
         handler,
-        <span class="hljs-built_in">Object</span>.assign({<span class="hljs-attr">once</span>: <span class="hljs-literal">true</span>}, options)
+        <span class="hljs-built_in">Object</span>.assign({<span class="hljs-attr">once</span>: <span class="hljs-literal">true</span>}, options),
     );
 });
 <span class="hljs-keyword">const</span> off = <span class="hljs-function">(<span class="hljs-params"><span class="hljs-built_in">module</span>.exports.off = (element, event, handler, options</span>) =&gt;</span> {
@@ -659,8 +652,7 @@ svgElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
 <p><em>get the currently executing script</em></p>
 <h5 id="example">example</h5>
 <pre><code><span class="hljs-keyword">const</span> thisScript = currentScript();
-<span class="hljs-built_in">console</span>.log(thisScript.src);
-</code></pre>
+<span class="hljs-built_in">console</span>.log(thisScript.src);</code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-built_in">module</span>.exports.currentScript = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">currentScript</span>(<span class="hljs-params"></span>) </span>{
@@ -700,8 +692,7 @@ svgElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
  style(a, {
      <span class="hljs-attr">color</span>: <span class="hljs-string">'green'</span>,
      <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">'red'</span>
- })
-</code></pre>
+ })</code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> style = <span class="hljs-function">(<span class="hljs-params"><span class="hljs-built_in">module</span>.exports.style = (elem, props</span>) =&gt;</span> {
@@ -744,8 +735,7 @@ svgElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
          $a.removeClass(<span class="hljs-string">'bar'</span>).addClass(<span class="hljs-string">'foo'</span>);
      }
  });
- $a.dispatch(<span class="hljs-string">'click'</span>);
-</code></pre>
+ $a.dispatch(<span class="hljs-string">'click'</span>);</code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> QueryList = (<span class="hljs-built_in">module</span>.exports.QueryList = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">QueryList</span> </span>{
@@ -768,7 +758,7 @@ svgElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
                     <span class="hljs-keyword">var</span> nodelist = context.querySelectorAll(selector);
                     <span class="hljs-built_in">Array</span>.prototype.forEach.call(nodelist, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">
                         node,
-                        index
+                        index,
                     </span>) </span>{
                         scope[index] = node;
                     });
@@ -807,7 +797,7 @@ svgElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
                 }
             } <span class="hljs-keyword">else</span> {
                 <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(
-                    <span class="hljs-string">'QueryList: invalid selector type: '</span> + objectType
+                    <span class="hljs-string">'QueryList: invalid selector type: '</span> + objectType,
                 );
             }
         }
@@ -894,7 +884,7 @@ QueryList.prototype.unshift = <span class="hljs-built_in">Array</span>.prototype
               </div>
               <h2 id="utilities">utilities</h2>
 <ul>
-<li><strong>type (<em>object</em> </strong>obj__)<ul>
+<li><strong>type (<em>object</em> __obj</strong>)<ul>
 <li>returns element class name by Object.toString</li>
 <li>example: if Object.toString(‘asdf’) === ‘[object String]’ then ‘String’</li>
 </ul>
@@ -922,7 +912,7 @@ QueryList.prototype.unshift = <span class="hljs-built_in">Array</span>.prototype
 <span class="hljs-keyword">const</span> hasClass = (<span class="hljs-built_in">module</span>.exports.hasClass = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">elem, className</span>) </span>{
     <span class="hljs-keyword">if</span> (isElement(elem) &amp;&amp; <span class="hljs-keyword">typeof</span> className === <span class="hljs-string">'string'</span>) {
         <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">'(\\s|^)'</span> + className + <span class="hljs-string">'(\\s|$)'</span>).test(
-            elem.className
+            elem.className,
         );
     }
 });
@@ -930,7 +920,7 @@ QueryList.prototype.unshift = <span class="hljs-built_in">Array</span>.prototype
     <span class="hljs-keyword">if</span> (isElement(elem) &amp;&amp; <span class="hljs-keyword">typeof</span> className === <span class="hljs-string">'string'</span>) {
         <span class="hljs-keyword">if</span> (
             <span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">'(\\s|^)'</span> + className + <span class="hljs-string">'(\\s|$)'</span>).test(
-                elem.className
+                elem.className,
             ) !== <span class="hljs-literal">true</span>
         ) {
             elem.className += (elem.className ? <span class="hljs-string">' '</span> : <span class="hljs-string">''</span>) + className;

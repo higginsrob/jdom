@@ -501,7 +501,7 @@ const once = (module.exports.once = (element, event, handler, options) => {
     element.addEventListener(
         event,
         handler,
-        Object.assign({once: true}, options)
+        Object.assign({once: true}, options),
     );
 });
 const off = (module.exports.off = (element, event, handler, options) => {
@@ -586,7 +586,7 @@ const QueryList = (module.exports.QueryList = class QueryList {
                     var nodelist = context.querySelectorAll(selector);
                     Array.prototype.forEach.call(nodelist, function(
                         node,
-                        index
+                        index,
                     ) {
                         scope[index] = node;
                     });
@@ -625,7 +625,7 @@ const QueryList = (module.exports.QueryList = class QueryList {
                 }
             } else {
                 throw new Error(
-                    'QueryList: invalid selector type: ' + objectType
+                    'QueryList: invalid selector type: ' + objectType,
                 );
             }
         }
@@ -725,7 +725,7 @@ const isElement = (module.exports.isElement = function isElement(obj) {
 const hasClass = (module.exports.hasClass = function(elem, className) {
     if (isElement(elem) && typeof className === 'string') {
         return new RegExp('(\\s|^)' + className + '(\\s|$)').test(
-            elem.className
+            elem.className,
         );
     }
 });
@@ -733,7 +733,7 @@ const addClass = (module.exports.addClass = function(elem, className) {
     if (isElement(elem) && typeof className === 'string') {
         if (
             new RegExp('(\\s|^)' + className + '(\\s|$)').test(
-                elem.className
+                elem.className,
             ) !== true
         ) {
             elem.className += (elem.className ? ' ' : '') + className;

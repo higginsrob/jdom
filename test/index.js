@@ -10,7 +10,6 @@ const server = new WebpackDevServer(compiler, webpackConfig.devServer);
 const Browser = require('zombie');
 
 describe('JDOM Headless Browser Testing\n', function() {
-
     Browser.localhost('localhost', 8080);
     const browser = new Browser();
 
@@ -31,7 +30,6 @@ describe('JDOM Headless Browser Testing\n', function() {
     });
 
     describe('Create / Update Element', function() {
-
         it('should create elements', function() {
             browser.assert.evaluate('createElements()');
         });
@@ -47,11 +45,9 @@ describe('JDOM Headless Browser Testing\n', function() {
         it('should update an elements style', function() {
             browser.assert.evaluate('setStyle()');
         });
-
     });
 
     describe('Create / Manipulate SVG', function() {
-
         beforeEach(function() {
             browser.assert.evaluate('createSvgDocument()');
         });
@@ -63,11 +59,9 @@ describe('JDOM Headless Browser Testing\n', function() {
         it('should manipulate SVG document', function() {
             browser.assert.evaluate('updateSvgDocument()');
         });
-
     });
 
     describe('Selector', function() {
-
         it('should select an element', function() {
             browser.assert.evaluate('selector()');
         });
@@ -79,12 +73,9 @@ describe('JDOM Headless Browser Testing\n', function() {
         it('should remove a class name from an element', function() {
             browser.assert.evaluate('removeClass()');
         });
-
     });
 
     after(function() {
         server.close();
     });
-
 });
-
