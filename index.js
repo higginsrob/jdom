@@ -26,28 +26,6 @@
 // } from 'jdom';
 // ```
 //
-// ---
-// __createElement__ (_string_ __tag__, _object_ __props__, _string_ __ns__);
-//
-// _create dom/svg elements_
-//
-// ##### example
-// ```
-//  const container = createElement('div', {
-//      id: 'myDiv',
-//      className: 'myClass',
-//      style: {
-//          color: 'red'
-//      },
-//      dataset: {
-//          foo: 'bar'
-//      },
-//      click: () => {
-//          container.style.color = 'blue';
-//      }
-//  });
-// ```
-//
 const factory = function(tag, props, ns) {
     if (!tag) {
         return;
@@ -134,68 +112,19 @@ const createElementNS = (module.exports.factory = (
 ) => {
     return factory(elem, setChildren(props, children), ns);
 });
-module.exports.Component = class Component {
-    constructor(tag, props, ...children) {
-        const scope = this;
-        scope.tag = tag;
-        scope.props = props;
-        scope.children = children;
-    }
-    render() {
-        const scope = this;
-        return createElement(scope.tag, scope.props, ...scope.children);
-    }
-};
-//
-// ---
-// __createSvgElement__ (_string_ __tag__, _object_ __props__);
-//
-// _create dom/svg elements_
-//
-// ##### example
-// ```
-//  const container = createSvgElement('svg', {
-//      id: 'mySvg',
-//      children: [
-//          createSvgElement('path', {
-//              d: 'M10 10'
-//          })
-//      ]
-//  });
-// ```
-// ---
-// __updateElement__ (_HTMLElement_ __elem__, _object_ __props__);
-//
-// _update dom elements_
-//
-// ##### example
-// ```
-//  const element = document.getElementById('asdf');
-//  const container = updateElement(element, {
-//      style: {
-//          color: 'blue'
-//      }
-//  })
-// ```
-//
-module.exports.updateElement = createElement;
 // ---
 // __DOM FACTORY METHODS__
 //
-// _syntactic sugar_
-//
-// elements: 'link', 'meta', 'style', 'title', 'address', 'article', 'aside', 'footer', 'header', 'h1','h2','h3', 'h4','h5','h6', 'hgroup', 'nav', 'section', 'blockquote', 'dd', 'dir', 'div', 'dl', 'figcaption', 'figure', 'hr', 'li', 'main', 'ol', 'p', 'pre', 'ul', 'a', 'abbr', 'b', 'bdi', 'bdo', 'br', 'cite', 'code', 'data', 'dfn', 'em', 'i', 'kdb', 'mark', 'q', 'rp', 'rt', 'rtc', 'ruby', 's', 'samp', 'small', 'span', 'strong', 'sub', 'sup', 'time', 'tt', 'u', 'var', 'wbr', 'area', 'audio', 'img', 'map', 'track', 'video', 'applet', 'embed', 'iframe', 'noembed', 'object', 'param', 'picture', 'source', 'canvas', 'noscript', 'script', 'del', 'ins', 'caption', 'col', 'colgroup', 'table', 'tbody', 'td', 'tfoot', 'th', 'thead', 'tr', 'button', 'datalist', 'fieldset', 'form', 'input', 'label', 'legend', 'meter', 'optgroup', 'option', 'output', 'progress', 'select', 'textarea', 'details', 'dialog', 'menu', 'menuitem', 'summary', 'content', 'element', 'shadow', 'slot', 'template'
-//
 // ##### example
 // ```
-// import {DIV, SCRIPT, SPAN} from 'jdom';
+// import {domFactory} from 'jdom';
+// const {DIV, SCRIPT, SPAN} = domFactory;
 //
 //  const div = DIV({
 //      id: 'myDiv',
 //      children: [
 //          'injecting script',
 //          SCRIPT({src: 'http://some.url'}),
-//          'done'
 //      ],
 //      parent: document.body
 //  });
@@ -332,13 +261,10 @@ domElements.forEach(elem => {
 // ---
 // __SVG FACTORY METHODS__
 //
-// _syntactic sugar_
-//
-// elements: 'a', 'altGyph', 'altGlyphDef', 'altGlyphItem', 'animate', 'animateColor', 'animateMotion', 'animateTransform', 'circle', 'clipPath', 'color-profile', 'cursor', 'defs', 'desc', 'discard', 'ellipse', 'feBlend', 'feColorMatrix', 'feComponentTransfer', 'feComposite', 'feConvolveMatrix', 'feDiffuseLighting', 'feDisplacementMap', 'feDistantLight', 'feDropShadow', 'feFlood', 'feFuncA', 'feFuncB', 'feFuncG', 'feFuncR', 'feGaussianBlur', 'feImage', 'feMerge', 'feMergeNode', 'feMorphology', 'feOffset', 'fePointLight', 'feSpecularLighting', 'feSpotLight', 'feTile', 'feTurbulence', 'filter', 'font', 'font-face', 'font-face-format', 'font-face-name', 'font-face-src', 'font-face-uri', 'foreignObject', 'g', 'glyph', 'glyphRef', 'hatch', 'hatchpath', 'hkern', 'image', 'line', 'linearGradient', 'marker', 'mask', 'mesh', 'meshgradient', 'meshpatch', 'meshrow', 'metadata', 'missing-glyph', 'mpath', 'path', 'pattern', 'polygon', 'polyline', 'radialGradient', 'rect', 'script', 'set', 'solidcolor', 'stop', 'style', 'svg', 'switch', 'symbol', 'text', 'textPath', 'title', 'tref', 'tspan', 'unknown', 'use', 'view', 'vkern'
-//
 // ##### example
 // ```
-// import {SVG, RECT, CIRCLE} from 'jdom';
+// import {svgFactory} from 'jdom';
+// const {SVG, RECT, CIRCLE} = svgFactory;
 //
 //  SVG({
 //      id: 'mySVG',
@@ -708,8 +634,6 @@ module.exports.$ = function(selector, context) {
 // ## utilities
 //
 // * __type (_object_ __obj__)
-//     * returns element class name by Object.toString
-//     * example: if Object.toString('asdf') === '[object String]' then 'String'
 // * __isObject__ (_object_ __obj__)
 // * __isArray__ (_object_ __obj__)
 // * __isElement__ (_object_ __obj__)

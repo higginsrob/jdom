@@ -47,35 +47,7 @@
    currentScript,
    style,
    isObject, isArray, isElement
-} <span class="hljs-keyword">from</span> <span class="hljs-string">'jdom'</span>;</code></pre><hr>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-3">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-3">&#182;</a>
-              </div>
-              <p><strong>createElement</strong> (<em>string</em> <strong>tag</strong>, <em>object</em> <strong>props</strong>, <em>string</em> <strong>ns</strong>);</p>
-<p><em>create dom/svg elements</em></p>
-<h5 id="example">example</h5>
-<pre><code> <span class="hljs-keyword">const</span> container = createElement(<span class="hljs-string">'div'</span>, {
-     <span class="hljs-attr">id</span>: <span class="hljs-string">'myDiv'</span>,
-     <span class="hljs-attr">className</span>: <span class="hljs-string">'myClass'</span>,
-     <span class="hljs-attr">style</span>: {
-         <span class="hljs-attr">color</span>: <span class="hljs-string">'red'</span>
-     },
-     <span class="hljs-attr">dataset</span>: {
-         <span class="hljs-attr">foo</span>: <span class="hljs-string">'bar'</span>
-     },
-     <span class="hljs-attr">click</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
-         container.style.color = <span class="hljs-string">'blue'</span>;
-     }
- });</code></pre>
+} <span class="hljs-keyword">from</span> <span class="hljs-string">'jdom'</span>;</code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> factory = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">tag, props, ns</span>) </span>{
@@ -163,19 +135,20 @@
     ...children
 ) =&gt; {
     <span class="hljs-keyword">return</span> factory(elem, setChildren(props, children), ns);
-});
-<span class="hljs-built_in">module</span>.exports.Component = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Component</span> </span>{
-    <span class="hljs-keyword">constructor</span>(tag, props, ...children) {
-        <span class="hljs-keyword">const</span> scope = <span class="hljs-keyword">this</span>;
-        scope.tag = tag;
-        scope.props = props;
-        scope.children = children;
-    }
-    render() {
-        <span class="hljs-keyword">const</span> scope = <span class="hljs-keyword">this</span>;
-        <span class="hljs-keyword">return</span> createElement(scope.tag, scope.props, ...scope.children);
-    }
-};</pre></div></div>
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <hr>
+
+            </div>
             
         </li>
         
@@ -186,89 +159,16 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <hr>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <p><strong>createSvgElement</strong> (<em>string</em> <strong>tag</strong>, <em>object</em> <strong>props</strong>);</p>
-<p><em>create dom/svg elements</em></p>
-<h5 id="example">example</h5>
-<pre><code> <span class="hljs-keyword">const</span> container = createSvgElement(<span class="hljs-string">'svg'</span>, {
-     <span class="hljs-attr">id</span>: <span class="hljs-string">'mySvg'</span>,
-     <span class="hljs-attr">children</span>: [
-         createSvgElement(<span class="hljs-string">'path'</span>, {
-             <span class="hljs-attr">d</span>: <span class="hljs-string">'M10 10'</span>
-         })
-     ]
- });</code></pre><hr>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <p><strong>updateElement</strong> (<em>HTMLElement</em> <strong>elem</strong>, <em>object</em> <strong>props</strong>);</p>
-<p><em>update dom elements</em></p>
-<h5 id="example">example</h5>
-<pre><code> <span class="hljs-keyword">const</span> element = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'asdf'</span>);
- <span class="hljs-keyword">const</span> container = updateElement(element, {
-     <span class="hljs-attr">style</span>: {
-         <span class="hljs-attr">color</span>: <span class="hljs-string">'blue'</span>
-     }
- })</code></pre>
-            </div>
-            
-            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">module</span>.exports.updateElement = createElement;</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <hr>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
               <p><strong>DOM FACTORY METHODS</strong></p>
-<p><em>syntactic sugar</em></p>
-<p>elements: ‘link’, ‘meta’, ‘style’, ‘title’, ‘address’, ‘article’, ‘aside’, ‘footer’, ‘header’, ‘h1’,’h2’,’h3’, ‘h4’,’h5’,’h6’, ‘hgroup’, ‘nav’, ‘section’, ‘blockquote’, ‘dd’, ‘dir’, ‘div’, ‘dl’, ‘figcaption’, ‘figure’, ‘hr’, ‘li’, ‘main’, ‘ol’, ‘p’, ‘pre’, ‘ul’, ‘a’, ‘abbr’, ‘b’, ‘bdi’, ‘bdo’, ‘br’, ‘cite’, ‘code’, ‘data’, ‘dfn’, ‘em’, ‘i’, ‘kdb’, ‘mark’, ‘q’, ‘rp’, ‘rt’, ‘rtc’, ‘ruby’, ‘s’, ‘samp’, ‘small’, ‘span’, ‘strong’, ‘sub’, ‘sup’, ‘time’, ‘tt’, ‘u’, ‘var’, ‘wbr’, ‘area’, ‘audio’, ‘img’, ‘map’, ‘track’, ‘video’, ‘applet’, ‘embed’, ‘iframe’, ‘noembed’, ‘object’, ‘param’, ‘picture’, ‘source’, ‘canvas’, ‘noscript’, ‘script’, ‘del’, ‘ins’, ‘caption’, ‘col’, ‘colgroup’, ‘table’, ‘tbody’, ‘td’, ‘tfoot’, ‘th’, ‘thead’, ‘tr’, ‘button’, ‘datalist’, ‘fieldset’, ‘form’, ‘input’, ‘label’, ‘legend’, ‘meter’, ‘optgroup’, ‘option’, ‘output’, ‘progress’, ‘select’, ‘textarea’, ‘details’, ‘dialog’, ‘menu’, ‘menuitem’, ‘summary’, ‘content’, ‘element’, ‘shadow’, ‘slot’, ‘template’</p>
 <h5 id="example">example</h5>
-<pre><code><span class="hljs-keyword">import</span> {DIV, SCRIPT, SPAN} <span class="hljs-keyword">from</span> <span class="hljs-string">'jdom'</span>;
+<pre><code><span class="hljs-keyword">import</span> {domFactory} <span class="hljs-keyword">from</span> <span class="hljs-string">'jdom'</span>;
+<span class="hljs-keyword">const</span> {DIV, SCRIPT, SPAN} = domFactory;
 
  <span class="hljs-keyword">const</span> div = DIV({
      <span class="hljs-attr">id</span>: <span class="hljs-string">'myDiv'</span>,
      <span class="hljs-attr">children</span>: [
          <span class="hljs-string">'injecting script'</span>,
          SCRIPT({<span class="hljs-attr">src</span>: <span class="hljs-string">'http://some.url'</span>}),
-         <span class="hljs-string">'done'</span>
      ],
      <span class="hljs-attr">parent</span>: <span class="hljs-built_in">document</span>.body
  });
@@ -407,11 +307,11 @@ domElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
         </li>
         
         
-        <li id="section-9">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <hr>
 
@@ -420,17 +320,16 @@ domElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
         </li>
         
         
-        <li id="section-10">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p><strong>SVG FACTORY METHODS</strong></p>
-<p><em>syntactic sugar</em></p>
-<p>elements: ‘a’, ‘altGyph’, ‘altGlyphDef’, ‘altGlyphItem’, ‘animate’, ‘animateColor’, ‘animateMotion’, ‘animateTransform’, ‘circle’, ‘clipPath’, ‘color-profile’, ‘cursor’, ‘defs’, ‘desc’, ‘discard’, ‘ellipse’, ‘feBlend’, ‘feColorMatrix’, ‘feComponentTransfer’, ‘feComposite’, ‘feConvolveMatrix’, ‘feDiffuseLighting’, ‘feDisplacementMap’, ‘feDistantLight’, ‘feDropShadow’, ‘feFlood’, ‘feFuncA’, ‘feFuncB’, ‘feFuncG’, ‘feFuncR’, ‘feGaussianBlur’, ‘feImage’, ‘feMerge’, ‘feMergeNode’, ‘feMorphology’, ‘feOffset’, ‘fePointLight’, ‘feSpecularLighting’, ‘feSpotLight’, ‘feTile’, ‘feTurbulence’, ‘filter’, ‘font’, ‘font-face’, ‘font-face-format’, ‘font-face-name’, ‘font-face-src’, ‘font-face-uri’, ‘foreignObject’, ‘g’, ‘glyph’, ‘glyphRef’, ‘hatch’, ‘hatchpath’, ‘hkern’, ‘image’, ‘line’, ‘linearGradient’, ‘marker’, ‘mask’, ‘mesh’, ‘meshgradient’, ‘meshpatch’, ‘meshrow’, ‘metadata’, ‘missing-glyph’, ‘mpath’, ‘path’, ‘pattern’, ‘polygon’, ‘polyline’, ‘radialGradient’, ‘rect’, ‘script’, ‘set’, ‘solidcolor’, ‘stop’, ‘style’, ‘svg’, ‘switch’, ‘symbol’, ‘text’, ‘textPath’, ‘title’, ‘tref’, ‘tspan’, ‘unknown’, ‘use’, ‘view’, ‘vkern’</p>
 <h5 id="example">example</h5>
-<pre><code><span class="hljs-keyword">import</span> {SVG, RECT, CIRCLE} <span class="hljs-keyword">from</span> <span class="hljs-string">'jdom'</span>;
+<pre><code><span class="hljs-keyword">import</span> {svgFactory} <span class="hljs-keyword">from</span> <span class="hljs-string">'jdom'</span>;
+<span class="hljs-keyword">const</span> {SVG, RECT, CIRCLE} = svgFactory;
 
  SVG({
      <span class="hljs-attr">id</span>: <span class="hljs-string">'mySVG'</span>,
@@ -562,11 +461,11 @@ svgElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
         </li>
         
         
-        <li id="section-11">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <hr>
 
@@ -575,11 +474,11 @@ svgElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
         </li>
         
         
-        <li id="section-12">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <h4 id="event-management">event management</h4>
 <ul>
@@ -629,11 +528,11 @@ svgElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
         </li>
         
         
-        <li id="section-13">
+        <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <hr>
 
@@ -642,11 +541,11 @@ svgElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
         </li>
         
         
-        <li id="section-14">
+        <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <p><strong>currentScript</strong> ()</p>
 <p><em>get the currently executing script</em></p>
@@ -671,11 +570,11 @@ svgElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
         </li>
         
         
-        <li id="section-15">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <hr>
 
@@ -684,11 +583,11 @@ svgElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
         </li>
         
         
-        <li id="section-16">
+        <li id="section-12">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
               <p><strong>style</strong> (<em>HTMLElement</em> <strong>elem</strong>, <em>object</em> <strong>props</strong>)</p>
 <p><em>update element style</em></p>
@@ -711,11 +610,11 @@ svgElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
         </li>
         
         
-        <li id="section-17">
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <hr>
 
@@ -724,11 +623,11 @@ svgElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
         </li>
         
         
-        <li id="section-18">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p><strong>QueryList ($)</strong> (<em>string</em>/<em>element</em>/<em>nodelist</em>/<em>array</em>/<em>function</em> <strong>selector</strong>)</p>
 <h5 id="example">example</h5>
@@ -881,19 +780,15 @@ QueryList.prototype.unshift = <span class="hljs-built_in">Array</span>.prototype
         </li>
         
         
-        <li id="section-19">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <h2 id="utilities">utilities</h2>
 <ul>
-<li><strong>type (<em>object</em> __obj</strong>)<ul>
-<li>returns element class name by Object.toString</li>
-<li>example: if Object.toString(‘asdf’) === ‘[object String]’ then ‘String’</li>
-</ul>
-</li>
+<li><strong>type (<em>object</em> __obj</strong>)</li>
 <li><strong>isObject</strong> (<em>object</em> <strong>obj</strong>)</li>
 <li><strong>isArray</strong> (<em>object</em> <strong>obj</strong>)</li>
 <li><strong>isElement</strong> (<em>object</em> <strong>obj</strong>)</li>
