@@ -38,10 +38,6 @@ describe('JDOM Headless Browser Testing\n', function() {
             browser.assert.evaluate('createSvgElements()');
         });
 
-        it('should update an element', function() {
-            browser.assert.evaluate('updateElement()');
-        });
-
         it('should update an elements style', function() {
             browser.assert.evaluate('setStyle()');
         });
