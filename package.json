@@ -1,11 +1,11 @@
 {
     "name": "jdom",
-    "version": "3.1.2",
+    "version": "3.1.4",
     "description": "lightweight dom builder",
     "main": "index.js",
     "scripts": {
         "docs": "docco -c style.css index.js",
-        "prepublish": "npm run docs",
+        "preversion": "npm run docs",
         "prettier": "prettier --loglevel=error --write '**/*.js' '**/*.json' '**/*.jsx' '**/*.css' '**/*.md'",
         "start": "webpack-dev-server",
         "test": "mocha test"
@@ -32,9 +32,12 @@
         ]
     },
     "devDependencies": {
+        "babel-eslint": "^10.0.3",
         "docco": "^0.8.0",
         "eslint": "^4.19.1",
-        "eslint-loader": "^2.0.0",
+        "eslint-config-prettier": "^6.2.0",
+        "eslint-loader": "^2.2.1",
+        "eslint-plugin-prettier": "^3.1.0",
         "html-webpack-plugin": "^3.2.0",
         "husky": "^3.0.4",
         "lint-staged": "^9.2.3",
