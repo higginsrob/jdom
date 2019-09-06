@@ -17,7 +17,7 @@
 //
 // ```
 // import {
-//    createElement, updateElement,
+//    createElement,
 //    DIV, SPAN, SCRIPT, STYLE, // ...etc
 //    on, once, off, dispatch,
 //    currentScript,
