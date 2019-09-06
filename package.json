@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "docs": "docco -c style.css index.js",
-        "prepublish": "npm run docs",
+        "preversion": "npm run docs",
         "prettier": "prettier --loglevel=error --write '**/*.js' '**/*.json' '**/*.jsx' '**/*.css' '**/*.md'",
         "start": "webpack-dev-server",
         "test": "mocha test"
