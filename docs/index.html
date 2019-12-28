@@ -42,99 +42,99 @@
 <p><em>intended usage with webpack</em></p>
 <pre><code><span class="hljs-keyword">import</span> {
    createElement,
-   DIV, SPAN, SCRIPT, STYLE, <span class="hljs-comment">// ...etc</span>
-   on, once, off, dispatch,
-   currentScript,
+   domFactory, svgFactory,
    style,
-   isObject, isArray, isElement
+   on, once, off, dispatch,
+   isArray, isElement, isObject,
+   currentScript
 } <span class="hljs-keyword">from</span> <span class="hljs-string">'jdom'</span>;</code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> factory = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">tag, props, ns</span>) </span>{
-    <span class="hljs-keyword">if</span> (!tag) {
-        <span class="hljs-keyword">return</span>;
-    }
-    <span class="hljs-keyword">let</span> elem;
-    <span class="hljs-keyword">if</span> (isElement(tag)) {
-        elem = tag;
-    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> tag === <span class="hljs-string">'string'</span>) {
-        <span class="hljs-keyword">if</span> (tag.charAt(<span class="hljs-number">0</span>) === <span class="hljs-string">'&lt;'</span>) {
-            <span class="hljs-keyword">const</span> parser = <span class="hljs-keyword">new</span> DOMParser();
-            <span class="hljs-keyword">const</span> doc = parser.parseFromString(tag, <span class="hljs-string">'text/html'</span>);
-            elem = doc.firstChild;
-        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> ns === <span class="hljs-string">'string'</span>) {
-            elem = <span class="hljs-built_in">document</span>.createElementNS(ns, tag);
-        } <span class="hljs-keyword">else</span> {
-            elem = <span class="hljs-built_in">document</span>.createElement(tag);
-        }
+  <span class="hljs-keyword">if</span> (!tag) {
+    <span class="hljs-keyword">return</span>;
+  }
+  <span class="hljs-keyword">let</span> elem;
+  <span class="hljs-keyword">if</span> (isElement(tag)) {
+    elem = tag;
+  } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> tag === <span class="hljs-string">"string"</span>) {
+    <span class="hljs-keyword">if</span> (tag.charAt(<span class="hljs-number">0</span>) === <span class="hljs-string">"&lt;"</span>) {
+      <span class="hljs-keyword">const</span> parser = <span class="hljs-keyword">new</span> DOMParser();
+      <span class="hljs-keyword">const</span> doc = parser.parseFromString(tag, <span class="hljs-string">"text/html"</span>);
+      elem = doc.firstChild;
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> ns === <span class="hljs-string">"string"</span>) {
+      elem = <span class="hljs-built_in">document</span>.createElementNS(ns, tag);
     } <span class="hljs-keyword">else</span> {
-        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'invalid tag type: '</span> + <span class="hljs-keyword">typeof</span> tag);
+      elem = <span class="hljs-built_in">document</span>.createElement(tag);
     }
-    <span class="hljs-keyword">if</span> (isObject(props)) {
-        <span class="hljs-built_in">Object</span>.keys(props).forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">key</span>) </span>{
-            <span class="hljs-keyword">if</span> (key === <span class="hljs-string">'style'</span>) {
-                <span class="hljs-keyword">if</span> (isObject(props.style)) {
-                    style(elem, props.style);
-                }
-            } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (key === <span class="hljs-string">'dataset'</span>) {
-                <span class="hljs-keyword">if</span> (isObject(props.dataset)) {
-                    <span class="hljs-built_in">Object</span>.keys(props.dataset).forEach(<span class="hljs-function"><span class="hljs-params">key</span> =&gt;</span> {
-                        elem.dataset[key] = props.dataset[key];
-                    });
-                }
-            } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (key === <span class="hljs-string">'parent'</span> &amp;&amp; isElement(props.parent)) {
-                props.parent.appendChild(elem);
-            } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (key === <span class="hljs-string">'children'</span>) {
-                <span class="hljs-keyword">if</span> (isArray(props.children)) {
-                    props.children.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">child</span>) </span>{
-                        <span class="hljs-keyword">if</span> (isElement(child)) {
-                            elem.appendChild(child);
-                        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> child === <span class="hljs-string">'string'</span>) {
-                            elem.appendChild(<span class="hljs-built_in">document</span>.createTextNode(child));
-                        }
-                    });
-                }
-            } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> props[key] === <span class="hljs-string">'function'</span>) {
-                elem.addEventListener(key, props[key]);
-            } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> ns === <span class="hljs-string">'string'</span>) {
-                elem.setAttributeNS(<span class="hljs-literal">null</span>, key, props[key]);
-            } <span class="hljs-keyword">else</span> {
-                elem[toCamelCase(key)] = props[key];
+  } <span class="hljs-keyword">else</span> {
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"invalid tag type: "</span> + <span class="hljs-keyword">typeof</span> tag);
+  }
+  <span class="hljs-keyword">if</span> (isObject(props)) {
+    <span class="hljs-built_in">Object</span>.keys(props).forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">key</span>) </span>{
+      <span class="hljs-keyword">if</span> (key === <span class="hljs-string">"style"</span>) {
+        <span class="hljs-keyword">if</span> (isObject(props.style)) {
+          style(elem, props.style);
+        }
+      } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (key === <span class="hljs-string">"dataset"</span>) {
+        <span class="hljs-keyword">if</span> (isObject(props.dataset)) {
+          <span class="hljs-built_in">Object</span>.keys(props.dataset).forEach(<span class="hljs-function"><span class="hljs-params">key</span> =&gt;</span> {
+            elem.dataset[key] = props.dataset[key];
+          });
+        }
+      } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (key === <span class="hljs-string">"parent"</span> &amp;&amp; isElement(props.parent)) {
+        props.parent.appendChild(elem);
+      } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (key === <span class="hljs-string">"children"</span>) {
+        <span class="hljs-keyword">if</span> (isArray(props.children)) {
+          props.children.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">child</span>) </span>{
+            <span class="hljs-keyword">if</span> (isElement(child)) {
+              elem.appendChild(child);
+            } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> child === <span class="hljs-string">"string"</span>) {
+              elem.appendChild(<span class="hljs-built_in">document</span>.createTextNode(child));
             }
-        });
-    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> props === <span class="hljs-string">'string'</span>) {
-        elem.innerHTML = props;
-    }
-    <span class="hljs-keyword">return</span> elem;
+          });
+        }
+      } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> props[key] === <span class="hljs-string">"function"</span>) {
+        elem.addEventListener(key, props[key]);
+      } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> ns === <span class="hljs-string">"string"</span>) {
+        elem.setAttributeNS(<span class="hljs-literal">null</span>, key, props[key]);
+      } <span class="hljs-keyword">else</span> {
+        elem[toCamelCase(key)] = props[key];
+      }
+    });
+  } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> props === <span class="hljs-string">"string"</span>) {
+    elem.innerHTML = props;
+  }
+  <span class="hljs-keyword">return</span> elem;
 };
 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setChildren</span>(<span class="hljs-params">props, children</span>) </span>{
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(children) &amp;&amp; children.length) {
-        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(props.children)) {
-            props.children = props.children.concat(children);
-        } <span class="hljs-keyword">else</span> {
-            props.children = children;
-        }
+  <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(children) &amp;&amp; children.length) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(props.children)) {
+      props.children = props.children.concat(children);
+    } <span class="hljs-keyword">else</span> {
+      props.children = children;
     }
-    <span class="hljs-keyword">return</span> props;
+  }
+  <span class="hljs-keyword">return</span> props;
 }
 <span class="hljs-keyword">const</span> createElement = (<span class="hljs-built_in">module</span>.exports.createElement = (
-    elem,
-    props,
-    ...children
+  elem,
+  props,
+  ...children
 ) =&gt; {
-    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> elem === <span class="hljs-string">'function'</span>) {
-        <span class="hljs-keyword">return</span> factory(<span class="hljs-keyword">new</span> elem(props), setChildren(props, children));
-    } <span class="hljs-keyword">else</span> {
-        <span class="hljs-keyword">return</span> factory(elem, setChildren(props, children));
-    }
+  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> elem === <span class="hljs-string">"function"</span>) {
+    <span class="hljs-keyword">return</span> factory(<span class="hljs-keyword">new</span> elem(props), setChildren(props, children));
+  } <span class="hljs-keyword">else</span> {
+    <span class="hljs-keyword">return</span> factory(elem, setChildren(props, children));
+  }
 });
 <span class="hljs-keyword">const</span> createElementNS = (<span class="hljs-built_in">module</span>.exports.factory = (
-    ns,
-    elem,
-    props,
-    ...children
+  ns,
+  elem,
+  props,
+  ...children
 ) =&gt; {
-    <span class="hljs-keyword">return</span> factory(elem, setChildren(props, children), ns);
+  <span class="hljs-keyword">return</span> factory(elem, setChildren(props, children), ns);
 });</pre></div></div>
             
         </li>
@@ -162,146 +162,147 @@
               <p><strong>DOM FACTORY METHODS</strong></p>
 <h5 id="example">example</h5>
 <pre><code><span class="hljs-keyword">import</span> {domFactory} <span class="hljs-keyword">from</span> <span class="hljs-string">'jdom'</span>;
-<span class="hljs-keyword">const</span> {DIV, SCRIPT, SPAN} = domFactory;
+<span class="hljs-keyword">const</span> {h1, div, script, span} = domFactory;
 
- <span class="hljs-keyword">const</span> div = DIV({
+ <span class="hljs-keyword">const</span> myDiv = div({
      <span class="hljs-attr">id</span>: <span class="hljs-string">'myDiv'</span>,
-     <span class="hljs-attr">children</span>: [
-         <span class="hljs-string">'injecting script'</span>,
-         SCRIPT({<span class="hljs-attr">src</span>: <span class="hljs-string">'http://some.url'</span>}),
-     ],
      <span class="hljs-attr">parent</span>: <span class="hljs-built_in">document</span>.body
+   },
+   h1({<span class="hljs-attr">className</span>: <span class="hljs-string">'myHeader'</span>}, <span class="hljs-string">'some header'</span>)
+   div({<span class="hljs-attr">id</span>: <span class="hljs-string">'theDiv'</span>}, <span class="hljs-string">'some text'</span>)
+   script({<span class="hljs-attr">src</span>: <span class="hljs-string">'http://some.url'</span>}),
+   <span class="hljs-string">'some more text'</span>
  });
 
- SPAN({<span class="hljs-attr">parent</span>: div, <span class="hljs-attr">children</span>: [<span class="hljs-string">'!!!!'</span>]);</code></pre>
+ span({<span class="hljs-attr">parent</span>: myDiv, <span class="hljs-string">'some span text'</span>);</code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre>
 <span class="hljs-keyword">const</span> domElements = (<span class="hljs-built_in">module</span>.exports.domElements = [
-    <span class="hljs-string">'link'</span>,
-    <span class="hljs-string">'meta'</span>,
-    <span class="hljs-string">'style'</span>,
-    <span class="hljs-string">'title'</span>,
-    <span class="hljs-string">'address'</span>,
-    <span class="hljs-string">'article'</span>,
-    <span class="hljs-string">'aside'</span>,
-    <span class="hljs-string">'footer'</span>,
-    <span class="hljs-string">'header'</span>,
-    <span class="hljs-string">'h1'</span>,
-    <span class="hljs-string">'h2'</span>,
-    <span class="hljs-string">'h3'</span>,
-    <span class="hljs-string">'h4'</span>,
-    <span class="hljs-string">'h5'</span>,
-    <span class="hljs-string">'h6'</span>,
-    <span class="hljs-string">'hgroup'</span>,
-    <span class="hljs-string">'nav'</span>,
-    <span class="hljs-string">'section'</span>,
-    <span class="hljs-string">'blockquote'</span>,
-    <span class="hljs-string">'dd'</span>,
-    <span class="hljs-string">'dir'</span>,
-    <span class="hljs-string">'div'</span>,
-    <span class="hljs-string">'dl'</span>,
-    <span class="hljs-string">'figcaption'</span>,
-    <span class="hljs-string">'figure'</span>,
-    <span class="hljs-string">'hr'</span>,
-    <span class="hljs-string">'li'</span>,
-    <span class="hljs-string">'main'</span>,
-    <span class="hljs-string">'ol'</span>,
-    <span class="hljs-string">'p'</span>,
-    <span class="hljs-string">'pre'</span>,
-    <span class="hljs-string">'ul'</span>,
-    <span class="hljs-string">'a'</span>,
-    <span class="hljs-string">'abbr'</span>,
-    <span class="hljs-string">'b'</span>,
-    <span class="hljs-string">'bdi'</span>,
-    <span class="hljs-string">'bdo'</span>,
-    <span class="hljs-string">'br'</span>,
-    <span class="hljs-string">'cite'</span>,
-    <span class="hljs-string">'code'</span>,
-    <span class="hljs-string">'data'</span>,
-    <span class="hljs-string">'dfn'</span>,
-    <span class="hljs-string">'em'</span>,
-    <span class="hljs-string">'i'</span>,
-    <span class="hljs-string">'kdb'</span>,
-    <span class="hljs-string">'mark'</span>,
-    <span class="hljs-string">'q'</span>,
-    <span class="hljs-string">'rp'</span>,
-    <span class="hljs-string">'rt'</span>,
-    <span class="hljs-string">'rtc'</span>,
-    <span class="hljs-string">'ruby'</span>,
-    <span class="hljs-string">'s'</span>,
-    <span class="hljs-string">'samp'</span>,
-    <span class="hljs-string">'small'</span>,
-    <span class="hljs-string">'span'</span>,
-    <span class="hljs-string">'strong'</span>,
-    <span class="hljs-string">'sub'</span>,
-    <span class="hljs-string">'sup'</span>,
-    <span class="hljs-string">'time'</span>,
-    <span class="hljs-string">'tt'</span>,
-    <span class="hljs-string">'u'</span>,
-    <span class="hljs-string">'var'</span>,
-    <span class="hljs-string">'wbr'</span>,
-    <span class="hljs-string">'area'</span>,
-    <span class="hljs-string">'audio'</span>,
-    <span class="hljs-string">'img'</span>,
-    <span class="hljs-string">'map'</span>,
-    <span class="hljs-string">'track'</span>,
-    <span class="hljs-string">'video'</span>,
-    <span class="hljs-string">'applet'</span>,
-    <span class="hljs-string">'embed'</span>,
-    <span class="hljs-string">'iframe'</span>,
-    <span class="hljs-string">'noembed'</span>,
-    <span class="hljs-string">'object'</span>,
-    <span class="hljs-string">'param'</span>,
-    <span class="hljs-string">'picture'</span>,
-    <span class="hljs-string">'source'</span>,
-    <span class="hljs-string">'canvas'</span>,
-    <span class="hljs-string">'noscript'</span>,
-    <span class="hljs-string">'script'</span>,
-    <span class="hljs-string">'del'</span>,
-    <span class="hljs-string">'ins'</span>,
-    <span class="hljs-string">'caption'</span>,
-    <span class="hljs-string">'col'</span>,
-    <span class="hljs-string">'colgroup'</span>,
-    <span class="hljs-string">'table'</span>,
-    <span class="hljs-string">'tbody'</span>,
-    <span class="hljs-string">'td'</span>,
-    <span class="hljs-string">'tfoot'</span>,
-    <span class="hljs-string">'th'</span>,
-    <span class="hljs-string">'thead'</span>,
-    <span class="hljs-string">'tr'</span>,
-    <span class="hljs-string">'button'</span>,
-    <span class="hljs-string">'datalist'</span>,
-    <span class="hljs-string">'fieldset'</span>,
-    <span class="hljs-string">'form'</span>,
-    <span class="hljs-string">'input'</span>,
-    <span class="hljs-string">'label'</span>,
-    <span class="hljs-string">'legend'</span>,
-    <span class="hljs-string">'meter'</span>,
-    <span class="hljs-string">'optgroup'</span>,
-    <span class="hljs-string">'option'</span>,
-    <span class="hljs-string">'output'</span>,
-    <span class="hljs-string">'progress'</span>,
-    <span class="hljs-string">'select'</span>,
-    <span class="hljs-string">'textarea'</span>,
-    <span class="hljs-string">'details'</span>,
-    <span class="hljs-string">'dialog'</span>,
-    <span class="hljs-string">'menu'</span>,
-    <span class="hljs-string">'menuitem'</span>,
-    <span class="hljs-string">'summary'</span>,
-    <span class="hljs-string">'content'</span>,
-    <span class="hljs-string">'element'</span>,
-    <span class="hljs-string">'shadow'</span>,
-    <span class="hljs-string">'slot'</span>,
-    <span class="hljs-string">'template'</span>,
+  <span class="hljs-string">"link"</span>,
+  <span class="hljs-string">"meta"</span>,
+  <span class="hljs-string">"style"</span>,
+  <span class="hljs-string">"title"</span>,
+  <span class="hljs-string">"address"</span>,
+  <span class="hljs-string">"article"</span>,
+  <span class="hljs-string">"aside"</span>,
+  <span class="hljs-string">"footer"</span>,
+  <span class="hljs-string">"header"</span>,
+  <span class="hljs-string">"h1"</span>,
+  <span class="hljs-string">"h2"</span>,
+  <span class="hljs-string">"h3"</span>,
+  <span class="hljs-string">"h4"</span>,
+  <span class="hljs-string">"h5"</span>,
+  <span class="hljs-string">"h6"</span>,
+  <span class="hljs-string">"hgroup"</span>,
+  <span class="hljs-string">"nav"</span>,
+  <span class="hljs-string">"section"</span>,
+  <span class="hljs-string">"blockquote"</span>,
+  <span class="hljs-string">"dd"</span>,
+  <span class="hljs-string">"dir"</span>,
+  <span class="hljs-string">"div"</span>,
+  <span class="hljs-string">"dl"</span>,
+  <span class="hljs-string">"figcaption"</span>,
+  <span class="hljs-string">"figure"</span>,
+  <span class="hljs-string">"hr"</span>,
+  <span class="hljs-string">"li"</span>,
+  <span class="hljs-string">"main"</span>,
+  <span class="hljs-string">"ol"</span>,
+  <span class="hljs-string">"p"</span>,
+  <span class="hljs-string">"pre"</span>,
+  <span class="hljs-string">"ul"</span>,
+  <span class="hljs-string">"a"</span>,
+  <span class="hljs-string">"abbr"</span>,
+  <span class="hljs-string">"b"</span>,
+  <span class="hljs-string">"bdi"</span>,
+  <span class="hljs-string">"bdo"</span>,
+  <span class="hljs-string">"br"</span>,
+  <span class="hljs-string">"cite"</span>,
+  <span class="hljs-string">"code"</span>,
+  <span class="hljs-string">"data"</span>,
+  <span class="hljs-string">"dfn"</span>,
+  <span class="hljs-string">"em"</span>,
+  <span class="hljs-string">"i"</span>,
+  <span class="hljs-string">"kdb"</span>,
+  <span class="hljs-string">"mark"</span>,
+  <span class="hljs-string">"q"</span>,
+  <span class="hljs-string">"rp"</span>,
+  <span class="hljs-string">"rt"</span>,
+  <span class="hljs-string">"rtc"</span>,
+  <span class="hljs-string">"ruby"</span>,
+  <span class="hljs-string">"s"</span>,
+  <span class="hljs-string">"samp"</span>,
+  <span class="hljs-string">"small"</span>,
+  <span class="hljs-string">"span"</span>,
+  <span class="hljs-string">"strong"</span>,
+  <span class="hljs-string">"sub"</span>,
+  <span class="hljs-string">"sup"</span>,
+  <span class="hljs-string">"time"</span>,
+  <span class="hljs-string">"tt"</span>,
+  <span class="hljs-string">"u"</span>,
+  <span class="hljs-string">"var"</span>,
+  <span class="hljs-string">"wbr"</span>,
+  <span class="hljs-string">"area"</span>,
+  <span class="hljs-string">"audio"</span>,
+  <span class="hljs-string">"img"</span>,
+  <span class="hljs-string">"map"</span>,
+  <span class="hljs-string">"track"</span>,
+  <span class="hljs-string">"video"</span>,
+  <span class="hljs-string">"applet"</span>,
+  <span class="hljs-string">"embed"</span>,
+  <span class="hljs-string">"iframe"</span>,
+  <span class="hljs-string">"noembed"</span>,
+  <span class="hljs-string">"object"</span>,
+  <span class="hljs-string">"param"</span>,
+  <span class="hljs-string">"picture"</span>,
+  <span class="hljs-string">"source"</span>,
+  <span class="hljs-string">"canvas"</span>,
+  <span class="hljs-string">"noscript"</span>,
+  <span class="hljs-string">"script"</span>,
+  <span class="hljs-string">"del"</span>,
+  <span class="hljs-string">"ins"</span>,
+  <span class="hljs-string">"caption"</span>,
+  <span class="hljs-string">"col"</span>,
+  <span class="hljs-string">"colgroup"</span>,
+  <span class="hljs-string">"table"</span>,
+  <span class="hljs-string">"tbody"</span>,
+  <span class="hljs-string">"td"</span>,
+  <span class="hljs-string">"tfoot"</span>,
+  <span class="hljs-string">"th"</span>,
+  <span class="hljs-string">"thead"</span>,
+  <span class="hljs-string">"tr"</span>,
+  <span class="hljs-string">"button"</span>,
+  <span class="hljs-string">"datalist"</span>,
+  <span class="hljs-string">"fieldset"</span>,
+  <span class="hljs-string">"form"</span>,
+  <span class="hljs-string">"input"</span>,
+  <span class="hljs-string">"label"</span>,
+  <span class="hljs-string">"legend"</span>,
+  <span class="hljs-string">"meter"</span>,
+  <span class="hljs-string">"optgroup"</span>,
+  <span class="hljs-string">"option"</span>,
+  <span class="hljs-string">"output"</span>,
+  <span class="hljs-string">"progress"</span>,
+  <span class="hljs-string">"select"</span>,
+  <span class="hljs-string">"textarea"</span>,
+  <span class="hljs-string">"details"</span>,
+  <span class="hljs-string">"dialog"</span>,
+  <span class="hljs-string">"menu"</span>,
+  <span class="hljs-string">"menuitem"</span>,
+  <span class="hljs-string">"summary"</span>,
+  <span class="hljs-string">"content"</span>,
+  <span class="hljs-string">"element"</span>,
+  <span class="hljs-string">"shadow"</span>,
+  <span class="hljs-string">"slot"</span>,
+  <span class="hljs-string">"template"</span>
 ]);
 <span class="hljs-keyword">const</span> domFactory = (<span class="hljs-built_in">module</span>.exports.domFactory = {});
 domElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</span> =&gt;</span> {
-    domFactory[elem] = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">props, ...children</span>) </span>{
-        <span class="hljs-keyword">return</span> createElement(elem, props, ...children);
-    };
-    domFactory[elem.toUpperCase()] = domFactory[elem];
-    domFactory[elem.toLowerCase()] = domFactory[elem];
+  domFactory[elem] = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">props, ...children</span>) </span>{
+    <span class="hljs-keyword">return</span> createElement(elem, props, ...children);
+  };
+  domFactory[elem.toUpperCase()] = domFactory[elem];
+  domFactory[elem.toLowerCase()] = domFactory[elem];
 });</pre></div></div>
             
         </li>
@@ -329,133 +330,132 @@ domElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
               <p><strong>SVG FACTORY METHODS</strong></p>
 <h5 id="example">example</h5>
 <pre><code><span class="hljs-keyword">import</span> {svgFactory} <span class="hljs-keyword">from</span> <span class="hljs-string">'jdom'</span>;
-<span class="hljs-keyword">const</span> {SVG, RECT, CIRCLE} = svgFactory;
+<span class="hljs-keyword">const</span> {svg, rect, circle} = svgFactory;
 
- SVG({
+svg({
      <span class="hljs-attr">id</span>: <span class="hljs-string">'mySVG'</span>,
      <span class="hljs-attr">width</span>: <span class="hljs-number">200</span>,
      <span class="hljs-attr">height</span>: <span class="hljs-number">200</span>,
      <span class="hljs-attr">viewBox</span>: <span class="hljs-string">'0 0 200 200'</span>,
-     <span class="hljs-attr">children</span>: [
-         RECT({
-             <span class="hljs-attr">fill</span> : <span class="hljs-string">'red'</span>,
-             <span class="hljs-attr">x</span>:<span class="hljs-number">5</span>,
-             <span class="hljs-attr">y</span>:<span class="hljs-number">5</span>,
-             <span class="hljs-attr">width</span>: <span class="hljs-number">190</span>,
-             <span class="hljs-attr">height</span>: <span class="hljs-number">190</span>
-         }),
-         CIRCLE({
-             <span class="hljs-attr">fill</span>: <span class="hljs-string">'yellow'</span>,
-             <span class="hljs-attr">cx</span>: <span class="hljs-number">100</span>,
-             <span class="hljs-attr">cy</span>:<span class="hljs-number">100</span>,
-             <span class="hljs-attr">r</span>:<span class="hljs-number">80</span>
-         })
-     ],
      <span class="hljs-attr">parent</span>: <span class="hljs-built_in">document</span>.body
- });</code></pre>
+   },
+   rect({
+       <span class="hljs-attr">fill</span> : <span class="hljs-string">'red'</span>,
+       <span class="hljs-attr">x</span>:<span class="hljs-number">5</span>,
+       <span class="hljs-attr">y</span>:<span class="hljs-number">5</span>,
+       <span class="hljs-attr">width</span>: <span class="hljs-number">190</span>,
+       <span class="hljs-attr">height</span>: <span class="hljs-number">190</span>
+   }),
+   circle({
+       <span class="hljs-attr">fill</span>: <span class="hljs-string">'yellow'</span>,
+       <span class="hljs-attr">cx</span>: <span class="hljs-number">100</span>,
+       <span class="hljs-attr">cy</span>:<span class="hljs-number">100</span>,
+       <span class="hljs-attr">r</span>:<span class="hljs-number">80</span>
+   })
+});</code></pre>
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> defaultNameSpace = <span class="hljs-string">'http://www.w3.org/2000/svg'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> defaultNameSpace = <span class="hljs-string">"http://www.w3.org/2000/svg"</span>;
 <span class="hljs-keyword">const</span> svgElements = (<span class="hljs-built_in">module</span>.exports.svgElements = [
-    <span class="hljs-string">'a'</span>,
-    <span class="hljs-string">'altGyph'</span>,
-    <span class="hljs-string">'altGlyphDef'</span>,
-    <span class="hljs-string">'altGlyphItem'</span>,
-    <span class="hljs-string">'animate'</span>,
-    <span class="hljs-string">'animateColor'</span>,
-    <span class="hljs-string">'animateMotion'</span>,
-    <span class="hljs-string">'animateTransform'</span>,
-    <span class="hljs-string">'circle'</span>,
-    <span class="hljs-string">'clipPath'</span>,
-    <span class="hljs-string">'color-profile'</span>,
-    <span class="hljs-string">'cursor'</span>,
-    <span class="hljs-string">'defs'</span>,
-    <span class="hljs-string">'desc'</span>,
-    <span class="hljs-string">'discard'</span>,
-    <span class="hljs-string">'ellipse'</span>,
-    <span class="hljs-string">'feBlend'</span>,
-    <span class="hljs-string">'feColorMatrix'</span>,
-    <span class="hljs-string">'feComponentTransfer'</span>,
-    <span class="hljs-string">'feComposite'</span>,
-    <span class="hljs-string">'feConvolveMatrix'</span>,
-    <span class="hljs-string">'feDiffuseLighting'</span>,
-    <span class="hljs-string">'feDisplacementMap'</span>,
-    <span class="hljs-string">'feDistantLight'</span>,
-    <span class="hljs-string">'feDropShadow'</span>,
-    <span class="hljs-string">'feFlood'</span>,
-    <span class="hljs-string">'feFuncA'</span>,
-    <span class="hljs-string">'feFuncB'</span>,
-    <span class="hljs-string">'feFuncG'</span>,
-    <span class="hljs-string">'feFuncR'</span>,
-    <span class="hljs-string">'feGaussianBlur'</span>,
-    <span class="hljs-string">'feImage'</span>,
-    <span class="hljs-string">'feMerge'</span>,
-    <span class="hljs-string">'feMergeNode'</span>,
-    <span class="hljs-string">'feMorphology'</span>,
-    <span class="hljs-string">'feOffset'</span>,
-    <span class="hljs-string">'fePointLight'</span>,
-    <span class="hljs-string">'feSpecularLighting'</span>,
-    <span class="hljs-string">'feSpotLight'</span>,
-    <span class="hljs-string">'feTile'</span>,
-    <span class="hljs-string">'feTurbulence'</span>,
-    <span class="hljs-string">'filter'</span>,
-    <span class="hljs-string">'font'</span>,
-    <span class="hljs-string">'font-face'</span>,
-    <span class="hljs-string">'font-face-format'</span>,
-    <span class="hljs-string">'font-face-name'</span>,
-    <span class="hljs-string">'font-face-src'</span>,
-    <span class="hljs-string">'font-face-uri'</span>,
-    <span class="hljs-string">'foreignObject'</span>,
-    <span class="hljs-string">'g'</span>,
-    <span class="hljs-string">'glyph'</span>,
-    <span class="hljs-string">'glyphRef'</span>,
-    <span class="hljs-string">'hatch'</span>,
-    <span class="hljs-string">'hatchpath'</span>,
-    <span class="hljs-string">'hkern'</span>,
-    <span class="hljs-string">'image'</span>,
-    <span class="hljs-string">'line'</span>,
-    <span class="hljs-string">'linearGradient'</span>,
-    <span class="hljs-string">'marker'</span>,
-    <span class="hljs-string">'mask'</span>,
-    <span class="hljs-string">'mesh'</span>,
-    <span class="hljs-string">'meshgradient'</span>,
-    <span class="hljs-string">'meshpatch'</span>,
-    <span class="hljs-string">'meshrow'</span>,
-    <span class="hljs-string">'metadata'</span>,
-    <span class="hljs-string">'missing-glyph'</span>,
-    <span class="hljs-string">'mpath'</span>,
-    <span class="hljs-string">'path'</span>,
-    <span class="hljs-string">'pattern'</span>,
-    <span class="hljs-string">'polygon'</span>,
-    <span class="hljs-string">'polyline'</span>,
-    <span class="hljs-string">'radialGradient'</span>,
-    <span class="hljs-string">'rect'</span>,
-    <span class="hljs-string">'script'</span>,
-    <span class="hljs-string">'set'</span>,
-    <span class="hljs-string">'solidcolor'</span>,
-    <span class="hljs-string">'stop'</span>,
-    <span class="hljs-string">'style'</span>,
-    <span class="hljs-string">'svg'</span>,
-    <span class="hljs-string">'switch'</span>,
-    <span class="hljs-string">'symbol'</span>,
-    <span class="hljs-string">'text'</span>,
-    <span class="hljs-string">'textPath'</span>,
-    <span class="hljs-string">'title'</span>,
-    <span class="hljs-string">'tref'</span>,
-    <span class="hljs-string">'tspan'</span>,
-    <span class="hljs-string">'unknown'</span>,
-    <span class="hljs-string">'use'</span>,
-    <span class="hljs-string">'view'</span>,
-    <span class="hljs-string">'vkern'</span>,
+  <span class="hljs-string">"a"</span>,
+  <span class="hljs-string">"altGyph"</span>,
+  <span class="hljs-string">"altGlyphDef"</span>,
+  <span class="hljs-string">"altGlyphItem"</span>,
+  <span class="hljs-string">"animate"</span>,
+  <span class="hljs-string">"animateColor"</span>,
+  <span class="hljs-string">"animateMotion"</span>,
+  <span class="hljs-string">"animateTransform"</span>,
+  <span class="hljs-string">"circle"</span>,
+  <span class="hljs-string">"clipPath"</span>,
+  <span class="hljs-string">"color-profile"</span>,
+  <span class="hljs-string">"cursor"</span>,
+  <span class="hljs-string">"defs"</span>,
+  <span class="hljs-string">"desc"</span>,
+  <span class="hljs-string">"discard"</span>,
+  <span class="hljs-string">"ellipse"</span>,
+  <span class="hljs-string">"feBlend"</span>,
+  <span class="hljs-string">"feColorMatrix"</span>,
+  <span class="hljs-string">"feComponentTransfer"</span>,
+  <span class="hljs-string">"feComposite"</span>,
+  <span class="hljs-string">"feConvolveMatrix"</span>,
+  <span class="hljs-string">"feDiffuseLighting"</span>,
+  <span class="hljs-string">"feDisplacementMap"</span>,
+  <span class="hljs-string">"feDistantLight"</span>,
+  <span class="hljs-string">"feDropShadow"</span>,
+  <span class="hljs-string">"feFlood"</span>,
+  <span class="hljs-string">"feFuncA"</span>,
+  <span class="hljs-string">"feFuncB"</span>,
+  <span class="hljs-string">"feFuncG"</span>,
+  <span class="hljs-string">"feFuncR"</span>,
+  <span class="hljs-string">"feGaussianBlur"</span>,
+  <span class="hljs-string">"feImage"</span>,
+  <span class="hljs-string">"feMerge"</span>,
+  <span class="hljs-string">"feMergeNode"</span>,
+  <span class="hljs-string">"feMorphology"</span>,
+  <span class="hljs-string">"feOffset"</span>,
+  <span class="hljs-string">"fePointLight"</span>,
+  <span class="hljs-string">"feSpecularLighting"</span>,
+  <span class="hljs-string">"feSpotLight"</span>,
+  <span class="hljs-string">"feTile"</span>,
+  <span class="hljs-string">"feTurbulence"</span>,
+  <span class="hljs-string">"filter"</span>,
+  <span class="hljs-string">"font"</span>,
+  <span class="hljs-string">"font-face"</span>,
+  <span class="hljs-string">"font-face-format"</span>,
+  <span class="hljs-string">"font-face-name"</span>,
+  <span class="hljs-string">"font-face-src"</span>,
+  <span class="hljs-string">"font-face-uri"</span>,
+  <span class="hljs-string">"foreignObject"</span>,
+  <span class="hljs-string">"g"</span>,
+  <span class="hljs-string">"glyph"</span>,
+  <span class="hljs-string">"glyphRef"</span>,
+  <span class="hljs-string">"hatch"</span>,
+  <span class="hljs-string">"hatchpath"</span>,
+  <span class="hljs-string">"hkern"</span>,
+  <span class="hljs-string">"image"</span>,
+  <span class="hljs-string">"line"</span>,
+  <span class="hljs-string">"linearGradient"</span>,
+  <span class="hljs-string">"marker"</span>,
+  <span class="hljs-string">"mask"</span>,
+  <span class="hljs-string">"mesh"</span>,
+  <span class="hljs-string">"meshgradient"</span>,
+  <span class="hljs-string">"meshpatch"</span>,
+  <span class="hljs-string">"meshrow"</span>,
+  <span class="hljs-string">"metadata"</span>,
+  <span class="hljs-string">"missing-glyph"</span>,
+  <span class="hljs-string">"mpath"</span>,
+  <span class="hljs-string">"path"</span>,
+  <span class="hljs-string">"pattern"</span>,
+  <span class="hljs-string">"polygon"</span>,
+  <span class="hljs-string">"polyline"</span>,
+  <span class="hljs-string">"radialGradient"</span>,
+  <span class="hljs-string">"rect"</span>,
+  <span class="hljs-string">"script"</span>,
+  <span class="hljs-string">"set"</span>,
+  <span class="hljs-string">"solidcolor"</span>,
+  <span class="hljs-string">"stop"</span>,
+  <span class="hljs-string">"style"</span>,
+  <span class="hljs-string">"svg"</span>,
+  <span class="hljs-string">"switch"</span>,
+  <span class="hljs-string">"symbol"</span>,
+  <span class="hljs-string">"text"</span>,
+  <span class="hljs-string">"textPath"</span>,
+  <span class="hljs-string">"title"</span>,
+  <span class="hljs-string">"tref"</span>,
+  <span class="hljs-string">"tspan"</span>,
+  <span class="hljs-string">"unknown"</span>,
+  <span class="hljs-string">"use"</span>,
+  <span class="hljs-string">"view"</span>,
+  <span class="hljs-string">"vkern"</span>
 ]);
 <span class="hljs-keyword">const</span> svgFactory = (<span class="hljs-built_in">module</span>.exports.svgFactory = {});
 svgElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</span> =&gt;</span> {
-    svgFactory[elem] = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">props, ...children</span>) </span>{
-        <span class="hljs-keyword">return</span> createElementNS(defaultNameSpace, elem, props, ...children);
-    };
-    svgFactory[elem] = svgFactory[elem];
-    svgFactory[elem.toUpperCase()] = svgFactory[elem];
-    svgFactory[elem.toLowerCase()] = svgFactory[elem];
+  svgFactory[elem] = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">props, ...children</span>) </span>{
+    <span class="hljs-keyword">return</span> createElementNS(defaultNameSpace, elem, props, ...children);
+  };
+  svgFactory[elem] = svgFactory[elem];
+  svgFactory[elem.toUpperCase()] = svgFactory[elem];
+  svgFactory[elem.toLowerCase()] = svgFactory[elem];
 });</pre></div></div>
             
         </li>
@@ -508,21 +508,21 @@ svgElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> on = <span class="hljs-function">(<span class="hljs-params"><span class="hljs-built_in">module</span>.exports.on = (element, event, handler, options</span>) =&gt;</span> {
-    element.addEventListener(event, handler, options);
+  element.addEventListener(event, handler, options);
 });
 <span class="hljs-keyword">const</span> once = <span class="hljs-function">(<span class="hljs-params"><span class="hljs-built_in">module</span>.exports.once = (element, event, handler, options</span>) =&gt;</span> {
-    element.addEventListener(
-        event,
-        handler,
-        <span class="hljs-built_in">Object</span>.assign({<span class="hljs-attr">once</span>: <span class="hljs-literal">true</span>}, options),
-    );
+  element.addEventListener(
+    event,
+    handler,
+    <span class="hljs-built_in">Object</span>.assign({ <span class="hljs-attr">once</span>: <span class="hljs-literal">true</span> }, options)
+  );
 });
 <span class="hljs-keyword">const</span> off = <span class="hljs-function">(<span class="hljs-params"><span class="hljs-built_in">module</span>.exports.off = (element, event, handler, options</span>) =&gt;</span> {
-    element.removeEventListener(event, handler, options);
+  element.removeEventListener(event, handler, options);
 });
 <span class="hljs-keyword">const</span> dispatch = <span class="hljs-function">(<span class="hljs-params"><span class="hljs-built_in">module</span>.exports.dispatch = (elem, event</span>) =&gt;</span> {
-    <span class="hljs-keyword">const</span> evt = <span class="hljs-keyword">new</span> Event(event);
-    elem.dispatchEvent(evt);
+  <span class="hljs-keyword">const</span> evt = <span class="hljs-keyword">new</span> Event(event);
+  elem.dispatchEvent(evt);
 });</pre></div></div>
             
         </li>
@@ -551,20 +551,21 @@ svgElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
 <p><em>get the currently executing script</em></p>
 <h5 id="example">example</h5>
 <pre><code><span class="hljs-keyword">const</span> thisScript = currentScript();
-<span class="hljs-built_in">console</span>.log(thisScript.src);</code></pre>
+<span class="hljs-built_in">console</span>.log(thisScript);
+</code></pre>
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-built_in">module</span>.exports.currentScript = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">currentScript</span>(<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">document</span>.currentScript) {
-        <span class="hljs-keyword">return</span> <span class="hljs-built_in">document</span>.currentScript;
+  <span class="hljs-keyword">if</span> (<span class="hljs-built_in">document</span>.currentScript) {
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">document</span>.currentScript;
+  }
+  <span class="hljs-keyword">const</span> scripts = <span class="hljs-built_in">document</span>.getElementsByTagName(<span class="hljs-string">"script"</span>);
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = scripts.length - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) {
+    <span class="hljs-keyword">const</span> script = scripts[i];
+    <span class="hljs-keyword">if</span> (script.src) {
+      <span class="hljs-keyword">return</span> script;
     }
-    <span class="hljs-keyword">const</span> scripts = <span class="hljs-built_in">document</span>.getElementsByTagName(<span class="hljs-string">'script'</span>);
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = scripts.length - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) {
-        <span class="hljs-keyword">const</span> script = scripts[i];
-        <span class="hljs-keyword">if</span> (script.src) {
-            <span class="hljs-keyword">return</span> script;
-        }
-    }
+  }
 };</pre></div></div>
             
         </li>
@@ -600,11 +601,11 @@ svgElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> style = <span class="hljs-function">(<span class="hljs-params"><span class="hljs-built_in">module</span>.exports.style = (elem, props</span>) =&gt;</span> {
-    <span class="hljs-keyword">if</span> (isElement(elem) &amp;&amp; isObject(props)) {
-        <span class="hljs-built_in">Object</span>.keys(props).forEach(<span class="hljs-function"><span class="hljs-params">key</span> =&gt;</span> {
-            elem.style[key] = props[key];
-        });
-    }
+  <span class="hljs-keyword">if</span> (isElement(elem) &amp;&amp; isObject(props)) {
+    <span class="hljs-built_in">Object</span>.keys(props).forEach(<span class="hljs-function"><span class="hljs-params">key</span> =&gt;</span> {
+      elem.style[key] = props[key];
+    });
+  }
 });</pre></div></div>
             
         </li>
@@ -643,125 +644,114 @@ svgElements.forEach(<span class="hljs-function"><span class="hljs-params">elem</
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> QueryList = (<span class="hljs-built_in">module</span>.exports.QueryList = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">QueryList</span> </span>{
-    <span class="hljs-keyword">constructor</span>(selector, context) {
-        <span class="hljs-keyword">var</span> scope = <span class="hljs-keyword">this</span>;
-        scope.length = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">if</span> (isElement(selector)) {
-            scope[<span class="hljs-number">0</span>] = selector;
-            scope.length = <span class="hljs-number">1</span>;
+  <span class="hljs-keyword">constructor</span>(selector, context) {
+    <span class="hljs-keyword">var</span> scope = <span class="hljs-keyword">this</span>;
+    scope.length = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">if</span> (isElement(selector)) {
+      scope[<span class="hljs-number">0</span>] = selector;
+      scope.length = <span class="hljs-number">1</span>;
+    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-keyword">const</span> objectType = type(selector);
+      <span class="hljs-keyword">if</span> (objectType === <span class="hljs-string">"String"</span>) {
+        <span class="hljs-keyword">if</span> (selector.charAt(<span class="hljs-number">0</span>) === <span class="hljs-string">"&lt;"</span>) {
+          scope[<span class="hljs-number">0</span>] = createElement(selector);
+          scope.length = <span class="hljs-number">1</span>;
         } <span class="hljs-keyword">else</span> {
-            <span class="hljs-keyword">const</span> objectType = type(selector);
-            <span class="hljs-keyword">if</span> (objectType === <span class="hljs-string">'String'</span>) {
-                <span class="hljs-keyword">if</span> (selector.charAt(<span class="hljs-number">0</span>) === <span class="hljs-string">'&lt;'</span>) {
-                    scope[<span class="hljs-number">0</span>] = createElement(selector);
-                    scope.length = <span class="hljs-number">1</span>;
-                } <span class="hljs-keyword">else</span> {
-                    <span class="hljs-keyword">if</span> (!context) {
-                        context = <span class="hljs-built_in">document</span>;
-                    }
-                    <span class="hljs-keyword">var</span> nodelist = context.querySelectorAll(selector);
-                    <span class="hljs-built_in">Array</span>.prototype.forEach.call(nodelist, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">
-                        node,
-                        index,
-                    </span>) </span>{
-                        scope[index] = node;
-                    });
-                    scope.length = nodelist.length;
-                }
-            } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (
-                objectType === <span class="hljs-string">'NodeList'</span> ||
-                objectType === <span class="hljs-string">'HTMLCollection'</span>
-            ) {
-                <span class="hljs-built_in">Array</span>.prototype.forEach.call(selector, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">node, index</span>) </span>{
-                    scope[index] = node;
-                });
-                scope.length = selector.length;
-            } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (
-                objectType === <span class="hljs-string">'Array'</span> ||
-                selector <span class="hljs-keyword">instanceof</span> QueryList
-            ) {
-                <span class="hljs-keyword">var</span> index = <span class="hljs-number">0</span>;
-                selector.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">node</span>) </span>{
-                    <span class="hljs-keyword">if</span> (isElement(node)) {
-                        scope[index] = node;
-                        index++;
-                    }
-                });
-                scope.length = index;
-            } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (objectType === <span class="hljs-string">'Function'</span>) {
-                <span class="hljs-keyword">if</span> (<span class="hljs-built_in">document</span>.readyState === <span class="hljs-string">'complete'</span>) {
-                    selector();
-                } <span class="hljs-keyword">else</span> {
-                    <span class="hljs-keyword">var</span> ready = <span class="hljs-built_in">window</span>.setInterval(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-                        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">document</span>.readyState === <span class="hljs-string">'complete'</span>) {
-                            <span class="hljs-built_in">window</span>.clearInterval(ready);
-                            selector();
-                        }
-                    }, <span class="hljs-number">10</span>);
-                }
-            } <span class="hljs-keyword">else</span> {
-                <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(
-                    <span class="hljs-string">'QueryList: invalid selector type: '</span> + objectType,
-                );
-            }
+          <span class="hljs-keyword">if</span> (!context) {
+            context = <span class="hljs-built_in">document</span>;
+          }
+          <span class="hljs-keyword">var</span> nodelist = context.querySelectorAll(selector);
+          <span class="hljs-built_in">Array</span>.prototype.forEach.call(nodelist, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">node, index</span>) </span>{
+            scope[index] = node;
+          });
+          scope.length = nodelist.length;
         }
-        <span class="hljs-keyword">return</span> scope;
-    }
-    on(event, handler, options) {
-        <span class="hljs-keyword">const</span> scope = <span class="hljs-keyword">this</span>;
-        scope.forEach(<span class="hljs-function"><span class="hljs-params">elem</span> =&gt;</span> {
-            on(elem, event, handler, options);
+      } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (objectType === <span class="hljs-string">"NodeList"</span> || objectType === <span class="hljs-string">"HTMLCollection"</span>) {
+        <span class="hljs-built_in">Array</span>.prototype.forEach.call(selector, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">node, index</span>) </span>{
+          scope[index] = node;
         });
-        <span class="hljs-keyword">return</span> scope;
-    }
-    once(event, handler, options) {
-        <span class="hljs-keyword">const</span> scope = <span class="hljs-keyword">this</span>;
-        scope.forEach(<span class="hljs-function"><span class="hljs-params">elem</span> =&gt;</span> {
-            once(elem, event, handler, options);
+        scope.length = selector.length;
+      } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (objectType === <span class="hljs-string">"Array"</span> || selector <span class="hljs-keyword">instanceof</span> QueryList) {
+        <span class="hljs-keyword">var</span> index = <span class="hljs-number">0</span>;
+        selector.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">node</span>) </span>{
+          <span class="hljs-keyword">if</span> (isElement(node)) {
+            scope[index] = node;
+            index++;
+          }
         });
-        <span class="hljs-keyword">return</span> scope;
+        scope.length = index;
+      } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (objectType === <span class="hljs-string">"Function"</span>) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">document</span>.readyState === <span class="hljs-string">"complete"</span>) {
+          selector();
+        } <span class="hljs-keyword">else</span> {
+          <span class="hljs-keyword">var</span> ready = <span class="hljs-built_in">window</span>.setInterval(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">document</span>.readyState === <span class="hljs-string">"complete"</span>) {
+              <span class="hljs-built_in">window</span>.clearInterval(ready);
+              selector();
+            }
+          }, <span class="hljs-number">10</span>);
+        }
+      } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"QueryList: invalid selector type: "</span> + objectType);
+      }
     }
-    off(event, handler, options) {
-        <span class="hljs-keyword">const</span> scope = <span class="hljs-keyword">this</span>;
-        scope.forEach(<span class="hljs-function"><span class="hljs-params">elem</span> =&gt;</span> {
-            off(elem, event, handler, options);
-        });
-        <span class="hljs-keyword">return</span> scope;
-    }
-    style(obj) {
-        <span class="hljs-keyword">const</span> scope = <span class="hljs-keyword">this</span>;
-        scope.forEach(<span class="hljs-function"><span class="hljs-params">elem</span> =&gt;</span> {
-            style(elem, obj);
-        });
-        <span class="hljs-keyword">return</span> scope;
-    }
-    dispatch(event) {
-        <span class="hljs-keyword">const</span> scope = <span class="hljs-keyword">this</span>;
-        scope.forEach(<span class="hljs-function"><span class="hljs-params">elem</span> =&gt;</span> {
-            dispatch(elem, event);
-        });
-        <span class="hljs-keyword">return</span> scope;
-    }
-    hasClass(str, strict) {
-        <span class="hljs-keyword">const</span> arrFun = !strict ? <span class="hljs-string">'some'</span> : <span class="hljs-string">'every'</span>;
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>[arrFun](<span class="hljs-function"><span class="hljs-params">elem</span> =&gt;</span> {
-            <span class="hljs-keyword">return</span> hasClass(elem, str);
-        });
-    }
-    addClass(str) {
-        <span class="hljs-keyword">const</span> scope = <span class="hljs-keyword">this</span>;
-        scope.forEach(<span class="hljs-function"><span class="hljs-params">elem</span> =&gt;</span> {
-            addClass(elem, str);
-        });
-        <span class="hljs-keyword">return</span> scope;
-    }
-    removeClass(str) {
-        <span class="hljs-keyword">const</span> scope = <span class="hljs-keyword">this</span>;
-        scope.forEach(<span class="hljs-function"><span class="hljs-params">elem</span> =&gt;</span> {
-            removeClass(elem, str);
-        });
-        <span class="hljs-keyword">return</span> scope;
-    }
+    <span class="hljs-keyword">return</span> scope;
+  }
+  on(event, handler, options) {
+    <span class="hljs-keyword">const</span> scope = <span class="hljs-keyword">this</span>;
+    scope.forEach(<span class="hljs-function"><span class="hljs-params">elem</span> =&gt;</span> {
+      on(elem, event, handler, options);
+    });
+    <span class="hljs-keyword">return</span> scope;
+  }
+  once(event, handler, options) {
+    <span class="hljs-keyword">const</span> scope = <span class="hljs-keyword">this</span>;
+    scope.forEach(<span class="hljs-function"><span class="hljs-params">elem</span> =&gt;</span> {
+      once(elem, event, handler, options);
+    });
+    <span class="hljs-keyword">return</span> scope;
+  }
+  off(event, handler, options) {
+    <span class="hljs-keyword">const</span> scope = <span class="hljs-keyword">this</span>;
+    scope.forEach(<span class="hljs-function"><span class="hljs-params">elem</span> =&gt;</span> {
+      off(elem, event, handler, options);
+    });
+    <span class="hljs-keyword">return</span> scope;
+  }
+  style(obj) {
+    <span class="hljs-keyword">const</span> scope = <span class="hljs-keyword">this</span>;
+    scope.forEach(<span class="hljs-function"><span class="hljs-params">elem</span> =&gt;</span> {
+      style(elem, obj);
+    });
+    <span class="hljs-keyword">return</span> scope;
+  }
+  dispatch(event) {
+    <span class="hljs-keyword">const</span> scope = <span class="hljs-keyword">this</span>;
+    scope.forEach(<span class="hljs-function"><span class="hljs-params">elem</span> =&gt;</span> {
+      dispatch(elem, event);
+    });
+    <span class="hljs-keyword">return</span> scope;
+  }
+  hasClass(str, strict) {
+    <span class="hljs-keyword">const</span> arrFun = !strict ? <span class="hljs-string">"some"</span> : <span class="hljs-string">"every"</span>;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>[arrFun](<span class="hljs-function"><span class="hljs-params">elem</span> =&gt;</span> {
+      <span class="hljs-keyword">return</span> hasClass(elem, str);
+    });
+  }
+  addClass(str) {
+    <span class="hljs-keyword">const</span> scope = <span class="hljs-keyword">this</span>;
+    scope.forEach(<span class="hljs-function"><span class="hljs-params">elem</span> =&gt;</span> {
+      addClass(elem, str);
+    });
+    <span class="hljs-keyword">return</span> scope;
+  }
+  removeClass(str) {
+    <span class="hljs-keyword">const</span> scope = <span class="hljs-keyword">this</span>;
+    scope.forEach(<span class="hljs-function"><span class="hljs-params">elem</span> =&gt;</span> {
+      removeClass(elem, str);
+    });
+    <span class="hljs-keyword">return</span> scope;
+  }
 });
 QueryList.prototype.filter = <span class="hljs-built_in">Array</span>.prototype.filter;
 QueryList.prototype.forEach = <span class="hljs-built_in">Array</span>.prototype.forEach;
@@ -774,7 +764,7 @@ QueryList.prototype.some = <span class="hljs-built_in">Array</span>.prototype.so
 QueryList.prototype.splice = <span class="hljs-built_in">Array</span>.prototype.splice;
 QueryList.prototype.unshift = <span class="hljs-built_in">Array</span>.prototype.unshift;
 <span class="hljs-built_in">module</span>.exports.$ = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">selector, context</span>) </span>{
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> QueryList(selector, context);
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> QueryList(selector, context);
 };</pre></div></div>
             
         </li>
@@ -798,54 +788,49 @@ QueryList.prototype.unshift = <span class="hljs-built_in">Array</span>.prototype
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">const</span> type = (<span class="hljs-built_in">module</span>.exports.type = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">obj</span>) </span>{
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Object</span>.prototype.toString.call(obj).slice(<span class="hljs-number">8</span>, <span class="hljs-number">-1</span>);
+  <span class="hljs-keyword">return</span> <span class="hljs-built_in">Object</span>.prototype.toString.call(obj).slice(<span class="hljs-number">8</span>, <span class="hljs-number">-1</span>);
 });
 <span class="hljs-keyword">const</span> isObject = (<span class="hljs-built_in">module</span>.exports.isObject = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isObject</span>(<span class="hljs-params">obj</span>) </span>{
-    <span class="hljs-keyword">return</span> type(obj) === <span class="hljs-string">'Object'</span>;
+  <span class="hljs-keyword">return</span> type(obj) === <span class="hljs-string">"Object"</span>;
 });
 <span class="hljs-keyword">const</span> isArray = (<span class="hljs-built_in">module</span>.exports.isArray = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isArray</span>(<span class="hljs-params">obj</span>) </span>{
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Array</span>.isArray(obj);
+  <span class="hljs-keyword">return</span> <span class="hljs-built_in">Array</span>.isArray(obj);
 });
 <span class="hljs-keyword">const</span> isElement = (<span class="hljs-built_in">module</span>.exports.isElement = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isElement</span>(<span class="hljs-params">obj</span>) </span>{
-    <span class="hljs-keyword">return</span> obj <span class="hljs-keyword">instanceof</span> SVGElement || obj <span class="hljs-keyword">instanceof</span> HTMLElement;
+  <span class="hljs-keyword">return</span> obj <span class="hljs-keyword">instanceof</span> SVGElement || obj <span class="hljs-keyword">instanceof</span> HTMLElement;
 });
 <span class="hljs-keyword">const</span> hasClass = (<span class="hljs-built_in">module</span>.exports.hasClass = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">elem, className</span>) </span>{
-    <span class="hljs-keyword">if</span> (isElement(elem) &amp;&amp; <span class="hljs-keyword">typeof</span> className === <span class="hljs-string">'string'</span>) {
-        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">'(\\s|^)'</span> + className + <span class="hljs-string">'(\\s|$)'</span>).test(
-            elem.className,
-        );
-    }
+  <span class="hljs-keyword">if</span> (isElement(elem) &amp;&amp; <span class="hljs-keyword">typeof</span> className === <span class="hljs-string">"string"</span>) {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">"(\\s|^)"</span> + className + <span class="hljs-string">"(\\s|$)"</span>).test(elem.className);
+  }
 });
 <span class="hljs-keyword">const</span> addClass = (<span class="hljs-built_in">module</span>.exports.addClass = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">elem, className</span>) </span>{
-    <span class="hljs-keyword">if</span> (isElement(elem) &amp;&amp; <span class="hljs-keyword">typeof</span> className === <span class="hljs-string">'string'</span>) {
-        <span class="hljs-keyword">if</span> (
-            <span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">'(\\s|^)'</span> + className + <span class="hljs-string">'(\\s|$)'</span>).test(
-                elem.className,
-            ) !== <span class="hljs-literal">true</span>
-        ) {
-            elem.className += (elem.className ? <span class="hljs-string">' '</span> : <span class="hljs-string">''</span>) + className;
-        }
+  <span class="hljs-keyword">if</span> (isElement(elem) &amp;&amp; <span class="hljs-keyword">typeof</span> className === <span class="hljs-string">"string"</span>) {
+    <span class="hljs-keyword">if</span> (
+      <span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">"(\\s|^)"</span> + className + <span class="hljs-string">"(\\s|$)"</span>).test(elem.className) !==
+      <span class="hljs-literal">true</span>
+    ) {
+      elem.className += (elem.className ? <span class="hljs-string">" "</span> : <span class="hljs-string">""</span>) + className;
     }
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+  }
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
 });
 <span class="hljs-keyword">const</span> removeClass = (<span class="hljs-built_in">module</span>.exports.addClass = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">elem, className</span>) </span>{
-    <span class="hljs-keyword">if</span> (isElement(elem) &amp;&amp; <span class="hljs-keyword">typeof</span> className === <span class="hljs-string">'string'</span>) {
-        <span class="hljs-keyword">if</span> (
-            <span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">'(\\s|^)'</span> + className + <span class="hljs-string">'(\\s|$)'</span>).test(elem.className)
-        ) {
-            elem.className = elem.className
-                .replace(<span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">'(\\s|^)'</span> + className + <span class="hljs-string">'(\\s|$)'</span>), <span class="hljs-string">' '</span>)
-                .replace(<span class="hljs-regexp">/^\s+|\s+$/g</span>, <span class="hljs-string">''</span>);
-        }
+  <span class="hljs-keyword">if</span> (isElement(elem) &amp;&amp; <span class="hljs-keyword">typeof</span> className === <span class="hljs-string">"string"</span>) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">"(\\s|^)"</span> + className + <span class="hljs-string">"(\\s|$)"</span>).test(elem.className)) {
+      elem.className = elem.className
+        .replace(<span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">"(\\s|^)"</span> + className + <span class="hljs-string">"(\\s|$)"</span>), <span class="hljs-string">" "</span>)
+        .replace(<span class="hljs-regexp">/^\s+|\s+$/g</span>, <span class="hljs-string">""</span>);
     }
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+  }
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
 });
 <span class="hljs-keyword">const</span> toCamelCase = (<span class="hljs-built_in">module</span>.exports.toCamelCase = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">str</span>) </span>{
-    <span class="hljs-keyword">return</span> str
-        .replace(<span class="hljs-regexp">/(?:^\w|[A-Z]|\b\w)/g</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">letter, index</span>) </span>{
-            <span class="hljs-keyword">return</span> index === <span class="hljs-number">0</span> ? letter.toLowerCase() : letter.toUpperCase();
-        })
-        .replace(<span class="hljs-regexp">/\s+/g</span>, <span class="hljs-string">''</span>);
+  <span class="hljs-keyword">return</span> str
+    .replace(<span class="hljs-regexp">/(?:^\w|[A-Z]|\b\w)/g</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">letter, index</span>) </span>{
+      <span class="hljs-keyword">return</span> index === <span class="hljs-number">0</span> ? letter.toLowerCase() : letter.toUpperCase();
+    })
+    .replace(<span class="hljs-regexp">/\s+/g</span>, <span class="hljs-string">""</span>);
 });</pre></div></div>
             
         </li>

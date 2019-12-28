@@ -153,10 +153,10 @@ import {SVG, RECT, CIRCLE} from 'jdom';
 
 #### event management
 
--   **on** (_HTMLElement_ **elem**, _string_ **event**, _function_ **handler**, _object_ **options**)
--   **once** (_HTMLElement_ **elem**, _string_ **event**, _function_ **handler**, _object_ **options**)
--   **off** (_HTMLElement_ **elem**, _string_ **event**, _function_ **handler**, _object_ **options**)
--   **dispatch** (_HTMLElement_ **elem**, _string_ **event**);
+- **on** (_HTMLElement_ **elem**, _string_ **event**, _function_ **handler**, _object_ **options**)
+- **once** (_HTMLElement_ **elem**, _string_ **event**, _function_ **handler**, _object_ **options**)
+- **off** (_HTMLElement_ **elem**, _string_ **event**, _function_ **handler**, _object_ **options**)
+- **dispatch** (_HTMLElement_ **elem**, _string_ **event**);
 
 ##### example
 
@@ -227,11 +227,11 @@ scope[0] = doc.firstChild;
 
 ## utilities
 
--   **type (_object_ **obj\_\_)
-    -   returns element class name by Object.toString
-    -   example: if Object.toString('asdf') === '[object String]' then 'String'
--   **isObject** (_object_ **obj**)
--   **isArray** (_object_ **obj**)
--   **isElement** (_object_ **obj**)
--   **toCamelCase** (_string_ **str**)
--   \__setChildren (\_object_ _obj_, _array_ _children_))
+- **type (_object_ **obj\_\_)
+  - returns element class name by Object.toString
+  - example: if Object.toString('asdf') === '[object String]' then 'String'
+- **isObject** (_object_ **obj**)
+- **isArray** (_object_ **obj**)
+- **isElement** (_object_ **obj**)
+- **toCamelCase** (_string_ **str**)
+- \__setChildren (\_object_ _obj_, _array_ _children_))
