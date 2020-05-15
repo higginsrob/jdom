@@ -457,7 +457,7 @@ svgElements.forEach(elem => {
 // );
 // ```
 //
-const query = qs.parse(window.location.search.substr(1));
+const query = window && qs.parse(window.location.search.substr(1));
 module.exports.Inputs = function(inputs) {
     if (Array.isArray(inputs)) {
         const container = domFactory.DIV({className: 'jdom-inputs-container'});
