@@ -1,4 +1,6 @@
+const qs = require('querystring');
 // # JDOM.js
+
 //
 // _lightweight dom builder_
 //
@@ -392,6 +394,314 @@ svgElements.forEach(elem => {
     svgFactory[elem.toUpperCase()] = svgFactory[elem];
     svgFactory[elem.toLowerCase()] = svgFactory[elem];
 });
+
+// ---
+// __GENERATE FORM INPUTS__
+//
+// ##### example
+// ```
+// import {Inputs, ButtonGroup} from 'jdom';
+// const {FORM} = svgFactory;
+//
+// FORM({
+//      id: 'form',
+//      parent: document.body
+//      submit: e => {
+//          doDomethingElse();
+//          e.preventDefault();
+//          return false;
+//      }
+//    },
+//    Inputs([{
+//        name : 'someText',
+//        defaultValue: 'hello world',
+//        placeholder: 'foo bar',
+//      }, {
+//        name : 'someText',
+//        type : 'select',
+//        options: [
+//          { name: Foo, value: foo }),
+//          { name: Bar, value: bar }),
+//        ],
+//      }, {
+//        name : 'someNumber',
+//        type : 'number',
+//        defaultValue: 5,
+//        step: 0.01,
+//        change: function(e) {
+//          alert(e);
+//        }
+//      }, {
+//        name : 'someCheckbox',
+//        type: 'checkbox',
+//      },
+//      ButtonGroup([{
+//          name: 'AAA',
+//          click: function(e) {
+//            alert('A');
+//          }
+//        }, {
+//          name: 'BBB',
+//          click: function(e) {
+//            alert('B');
+//          }
+//      }])
+//    ]),
+//    ButtonGroup([{
+//        type: 'reset',
+//        name: reset,
+//      }, {
+//        type: 'submit',
+//        name: submit,
+//    }])
+// );
+// ```
+//
+const query = qs.parse(window.location.search.substr(1));
+module.exports.Inputs = function(inputs) {
+    if (Array.isArray(inputs)) {
+        const container = domFactory.DIV({className: 'jdom-inputs-container'});
+        inputs.forEach(input => {
+            let elem;
+            if (input) {
+                if (input.type === 'select') {
+                    elem = generateSelect(input);
+                } else if (input.type === 'checkbox') {
+                    elem = generateCheckbox(input);
+                } else if (
+                    input.type === 'button' ||
+                    input.type === 'reset' ||
+                    input.type === 'submit'
+                ) {
+                    elem = generateButton(input);
+                } else if (isElement(input)) {
+                    elem = input;
+                } else {
+                    elem = generateInput(input);
+                }
+            }
+            if (elem) {
+                container.appendChild(elem);
+            }
+        });
+        return container;
+    }
+};
+
+module.exports.ButtonGroup = function(buttons) {
+    if (Array.isArray(buttons)) {
+        const container = domFactory.DIV({className: 'jdom-button-group'});
+        buttons.forEach(input => {
+            if (input) {
+                container.appendChild(generateButton(input));
+            }
+        });
+        return container;
+    }
+};
+
+function generateInput(input) {
+    var elem = document.createElement('input');
+    elem.type = input.type || 'text';
+    elem.className = 'jdom-input jdom-text';
+    if (input.name) {
+        elem.name = input.name;
+        elem.id = input.name;
+    }
+    elem.value = query[input.name] || input.defaultValue || '';
+    elem.placeholder = input.placeholder || '';
+    if (input.style) {
+        style(elem, input.style);
+    }
+    if (input.required) {
+        elem.required = true;
+    }
+    if (input.step) {
+        elem.step = input.step;
+    }
+    if (input.readOnly) {
+        elem.readOnly = true;
+    }
+    if (input.disabled) {
+        elem.disabled = true;
+    }
+    let container;
+    if (input.type === 'hidden') {
+        return elem;
+    }
+    container = document.createElement('div');
+    container.className = 'jdom-input-container';
+    var label = document.createElement('label');
+    label.className = 'jdom-input-label';
+    if (input.description) {
+        label.title = input.description;
+    }
+    if (input.name) {
+        label.innerText =
+            input.name.replace(/([A-Z])/g, ' $1').replace(/^./, function(str) {
+                return str.toUpperCase();
+            }) + ': ';
+        label.htmlFor = input.name;
+    }
+    container.appendChild(label);
+    container.appendChild(elem);
+    return container;
+}
+
+function generateSelect(input) {
+    var elem = document.createElement('select');
+    elem.className = 'jdom-input jdom-select';
+    if (input.name) {
+        elem.name = input.name;
+        elem.id = input.name;
+        elem.value = input.name;
+    }
+    if (input.style) {
+        style(elem, input.style);
+    }
+    if (input.required) {
+        elem.required = true;
+    }
+    if (input.readOnly) {
+        elem.readOnly = true;
+    }
+    if (input.disabled) {
+        elem.disabled = true;
+    }
+    elem.onchange = handleInputs.bind(null, input, elem);
+    if (Array.isArray(input.options)) {
+        input.options.forEach((option, index) => {
+            const elem = document.createElement('option');
+            if (typeof option === 'string') {
+                option = {name: option, value: option};
+            }
+            elem.value = option.value;
+            elem.innerHTML = option.name;
+            elem.appendChild(elem);
+            if (option.value === query[input.name]) {
+                elem.selectedIndex = index;
+            }
+        });
+    }
+    var container = document.createElement('div');
+    container.className = 'jdom-input-container';
+    var label = document.createElement('label');
+    label.className = 'jdom-input-label';
+    if (input.description) {
+        label.title = input.description;
+    }
+    if (input.name) {
+        label.innerText =
+            input.name.replace(/([A-Z])/g, ' $1').replace(/^./, function(str) {
+                return str.toUpperCase();
+            }) + ': ';
+        label.htmlFor = input.name;
+    }
+    container.appendChild(label);
+    container.appendChild(elem);
+    return container;
+}
+
+function generateCheckbox(input) {
+    var elem = document.createElement('input');
+    elem.className = 'jdom-input jdom-checkbox';
+    elem.type = 'checkbox';
+    if (input.name) {
+        elem.name = input.name;
+        elem.id = input.name;
+        elem.checked = query[input.name] === 'on';
+    }
+    if (input.style) {
+        style(elem, input.style);
+    }
+    if (input.readOnly) {
+        elem.readOnly = true;
+    }
+    if (input.disabled) {
+        elem.disabled = true;
+    }
+    elem.onchange = handleInputs.bind(null, input, elem);
+    var container = document.createElement('div');
+    container.className = 'jdom-input-container';
+    var label = document.createElement('label');
+    label.className = 'jdom-input-label';
+    if (input.description) {
+        label.title = input.description;
+    }
+    if (input.name) {
+        label.innerText =
+            input.name.replace(/([A-Z])/g, ' $1').replace(/^./, function(str) {
+                return str.toUpperCase();
+            }) + ': ';
+        label.htmlFor = input.name;
+    }
+    container.appendChild(label);
+    container.appendChild(elem);
+    return container;
+}
+
+function generateButton(input) {
+    var elem = document.createElement('button');
+    elem.className = 'jdom-input-button';
+    elem.type = input.type || 'button';
+    if (input.name) {
+        elem.name = input.name;
+        elem.id = input.name;
+    }
+    elem.innerText = input.name;
+    style(elem, {
+        textTransorm: 'uppercase',
+        border: 'none',
+        cursor: 'pointer',
+    });
+    if (input.style) {
+        style(elem, input.style);
+    }
+    elem.onclick = () => {
+        if (typeof input.click === 'function') {
+            input.click(elem);
+        }
+        window.setTimeout(() => {
+            if (
+                elem.parentNode &&
+                elem.parentNode.className === 'jdom-button-group'
+            ) {
+                Array.prototype.forEach.call(
+                    elem.parentNode.children,
+                    child => {
+                        if (child === elem) {
+                            child.style.zIndex = 1;
+                        } else {
+                            child.style.zIndex = 0;
+                        }
+                    }
+                );
+            }
+        });
+    };
+    if (input.description) {
+        elem.title = input.description;
+    }
+    if (input.readOnly) {
+        elem.readOnly = true;
+    }
+    if (input.disabled) {
+        elem.disabled = true;
+    }
+    return elem;
+}
+
+function handleInputs(config) {
+    const submitButton = new QueryList('button[type="submit"]')[0];
+    if (typeof config.change === 'function') {
+        if (config.change(config) && submitButton) {
+            submitButton.click();
+        }
+    } else if (submitButton) {
+        submitButton.click();
+    }
+}
+
 // ---
 // #### event management
 //
@@ -650,7 +960,15 @@ const isArray = (module.exports.isArray = function isArray(obj) {
     return Array.isArray(obj);
 });
 const isElement = (module.exports.isElement = function isElement(obj) {
-    return obj instanceof SVGElement || obj instanceof HTMLElement;
+    return typeof HTMLElement === 'object'
+        ? obj instanceof HTMLElement
+        : typeof SVGElement === 'object'
+        ? obj instanceof SVGElement
+        : obj &&
+          typeof obj === 'object' &&
+          obj !== null &&
+          obj.nodeType === 1 &&
+          typeof obj.nodeName === 'string';
 });
 const hasClass = (module.exports.hasClass = function(elem, className) {
     if (isElement(elem) && typeof className === 'string') {
