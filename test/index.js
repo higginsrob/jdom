@@ -4,7 +4,6 @@ const Webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
 const webpackConfig = require('../webpack.config')();
 
-webpackConfig.devServer.stats = 'errors-only';
 const compiler = Webpack(webpackConfig);
 const server = new WebpackDevServer(compiler, webpackConfig.devServer);
 const Browser = require('zombie');
@@ -14,7 +13,7 @@ describe('JDOM Headless Browser Testing\n', function() {
     const browser = new Browser();
 
     before(function(done) {
-        this.timeout(4000);
+        this.timeout(10000);
         compiler.hooks.done.tap('done', () => {
             server.listen(8080, 'localhost', () => {
                 console.log('\n');

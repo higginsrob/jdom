@@ -1,33 +1,5 @@
 const qs = require('querystring');
-// # JDOM.js
 
-//
-// _lightweight dom builder_
-//
-// ---
-//
-// ##### installation
-//
-// ```
-// npm install jdom
-//
-// ```
-//
-// #### usage
-//
-// _intended usage with webpack_
-//
-// ```
-// import {
-//    createElement,
-//    domFactory, svgFactory,
-//    style,
-//    on, once, off, dispatch,
-//    isArray, isElement, isObject,
-//    currentScript
-// } from 'jdom';
-// ```
-//
 const factory = function(tag, props, ns) {
     if (!tag) {
         return;
@@ -114,26 +86,6 @@ const createElementNS = (module.exports.factory = (
 ) => {
     return factory(elem, setChildren(props, children), ns);
 });
-// ---
-// __DOM FACTORY METHODS__
-//
-// ##### example
-// ```
-// import {domFactory} from 'jdom';
-// const {h1, div, script, span} = domFactory;
-//
-//  const myDiv = div({
-//      id: 'myDiv',
-//      parent: document.body
-//    },
-//    h1({className: 'myHeader'}, 'some header')
-//    div({id: 'theDiv'}, 'some text')
-//    script({src: 'http://some.url'}),
-//    'some more text'
-//  });
-//
-//  span({parent: myDiv, 'some span text');
-// ```
 
 const domElements = (module.exports.domElements = [
     'link',
@@ -261,37 +213,7 @@ domElements.forEach(elem => {
     domFactory[elem.toUpperCase()] = domFactory[elem];
     domFactory[elem.toLowerCase()] = domFactory[elem];
 });
-// ---
-// __SVG FACTORY METHODS__
-//
-// ##### example
-// ```
-// import {svgFactory} from 'jdom';
-// const {svg, rect, circle} = svgFactory;
-//
-// svg({
-//      id: 'mySVG',
-//      width: 200,
-//      height: 200,
-//      viewBox: '0 0 200 200',
-//      parent: document.body
-//    },
-//    rect({
-//        fill : 'red',
-//        x:5,
-//        y:5,
-//        width: 190,
-//        height: 190
-//    }),
-//    circle({
-//        fill: 'yellow',
-//        cx: 100,
-//        cy:100,
-//        r:80
-//    })
-// });
-// ```
-//
+
 const defaultNameSpace = 'http://www.w3.org/2000/svg';
 const svgElements = (module.exports.svgElements = [
     'a',
@@ -395,68 +317,6 @@ svgElements.forEach(elem => {
     svgFactory[elem.toLowerCase()] = svgFactory[elem];
 });
 
-// ---
-// __GENERATE FORM INPUTS__
-//
-// ##### example
-// ```
-// import {Inputs, ButtonGroup} from 'jdom';
-// const {FORM} = svgFactory;
-//
-// FORM({
-//      id: 'form',
-//      parent: document.body
-//      submit: e => {
-//          doDomethingElse();
-//          e.preventDefault();
-//          return false;
-//      }
-//    },
-//    Inputs([{
-//        name : 'someText',
-//        defaultValue: 'hello world',
-//        placeholder: 'foo bar',
-//      }, {
-//        name : 'someText',
-//        type : 'select',
-//        options: [
-//          { name: Foo, value: foo }),
-//          { name: Bar, value: bar }),
-//        ],
-//      }, {
-//        name : 'someNumber',
-//        type : 'number',
-//        defaultValue: 5,
-//        step: 0.01,
-//        change: function(e) {
-//          alert(e);
-//        }
-//      }, {
-//        name : 'someCheckbox',
-//        type: 'checkbox',
-//      },
-//      ButtonGroup([{
-//          name: 'AAA',
-//          click: function(e) {
-//            alert('A');
-//          }
-//        }, {
-//          name: 'BBB',
-//          click: function(e) {
-//            alert('B');
-//          }
-//      }])
-//    ]),
-//    ButtonGroup([{
-//        type: 'reset',
-//        name: reset,
-//      }, {
-//        type: 'submit',
-//        name: submit,
-//    }])
-// );
-// ```
-//
 const query = window && qs.parse(window.location.search.substr(1));
 module.exports.Inputs = function(inputs) {
     if (Array.isArray(inputs)) {
@@ -702,34 +562,6 @@ function handleInputs(config) {
     }
 }
 
-// ---
-// #### event management
-//
-// * __on__ (_HTMLElement_ __elem__, _string_ __event__, _function_ __handler__, _object_ __options__)
-// * __once__ (_HTMLElement_ __elem__, _string_ __event__, _function_ __handler__, _object_ __options__)
-// * __off__ (_HTMLElement_ __elem__, _string_ __event__, _function_ __handler__, _object_ __options__)
-// * __dispatch__ (_HTMLElement_ __elem__, _string_ __event__);
-//
-// ##### example
-// ```
-//  const a = document.getElementById('aDiv');
-//  const mouseover = () => {
-//      a.style.backgroundColor = 'red';
-//      console.log('mouseover');
-//  }
-//
-//  on(a, 'mouseover', mouseover);
-//
-//  once(a, 'click', () => {
-//      off(a, 'mouseover', mouseover);
-//      console.log('silenced mouseover');
-//  });
-//
-//  //simulate click after 5 seconds
-//  window.setTimeout(() => {
-//      dispatch(a, 'click');
-//  }, 10000);
-// ```
 const on = (module.exports.on = (element, event, handler, options) => {
     element.addEventListener(event, handler, options);
 });
@@ -747,22 +579,8 @@ const dispatch = (module.exports.dispatch = (elem, event) => {
     const evt = new Event(event);
     elem.dispatchEvent(evt);
 });
-// ---
-// __currentScript__ ()
-//
-// _get the currently executing script_
-//
-// ##### example
-//
-// ```
-// const thisScript = currentScript();
-// console.log(thisScript);
-//
-// ```
+
 module.exports.currentScript = function currentScript() {
-    if (document.currentScript) {
-        return document.currentScript;
-    }
     const scripts = document.getElementsByTagName('script');
     for (var i = scripts.length - 1; i >= 0; i--) {
         const script = scripts[i];
@@ -771,20 +589,7 @@ module.exports.currentScript = function currentScript() {
         }
     }
 };
-// ---
-// __style__ (_HTMLElement_ __elem__, _object_ __props__)
-//
-// _update element style_
-//
-// ##### example
-// ```
-//  const a = document.getElementById('aDiv');
-//  style(a, {
-//      color: 'green',
-//      backgroundColor: 'red'
-//  })
-// ```
-//
+
 const style = (module.exports.style = (elem, props) => {
     if (isElement(elem) && isObject(props)) {
         Object.keys(props).forEach(key => {
@@ -792,22 +597,7 @@ const style = (module.exports.style = (elem, props) => {
         });
     }
 });
-// ---
-// __QueryList ($)__ (_string_/_element_/_nodelist_/_array_/_function_ __selector__)
-//
-// ##### example
-// ```
-//  const $a = $('#aDiv');
-//  $a.on('click', () => {
-//      if ($a.hasClass('foo')) {
-//          $a.removeClass('foo').addClass('bar');
-//      } else {
-//          $a.removeClass('bar').addClass('foo');
-//      }
-//  });
-//  $a.dispatch('click');
-// ```
-//
+
 const QueryList = (module.exports.QueryList = class QueryList {
     constructor(selector, context) {
         var scope = this;
@@ -942,14 +732,7 @@ QueryList.prototype.unshift = Array.prototype.unshift;
 module.exports.$ = function(selector, context) {
     return new QueryList(selector, context);
 };
-// ## utilities
-//
-// * __type (_object_ __obj__)
-// * __isObject__ (_object_ __obj__)
-// * __isArray__ (_object_ __obj__)
-// * __isElement__ (_object_ __obj__)
-// * __toCamelCase__ (_string_ __str__)
-//
+
 const type = (module.exports.type = function(obj) {
     return Object.prototype.toString.call(obj).slice(8, -1);
 });
