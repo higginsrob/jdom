@@ -14,7 +14,6 @@ module.exports = function(env) {
         output: {
             path: build,
             filename: '[name].js',
-            chunkFilename: '[name].js',
             library: ['jdom'],
             libraryTarget: 'umd',
         },
@@ -27,6 +26,16 @@ module.exports = function(env) {
                     use: ['eslint-loader'],
                 },
             ],
+        },
+        devtool: !isProduction && 'source-map',
+        devServer: {
+            inline: false,
+            stats: {
+                colors: true,
+                chunks: false,
+                modules: false,
+                children: false,
+            },
         },
         resolve: {
             modules: ['node_modules'],
@@ -43,17 +52,6 @@ module.exports = function(env) {
         },
     };
     if (!isProduction) {
-        config.devtool = 'source-map';
-        config.devServer = {
-            contentBase: build,
-            inline: false,
-            stats: {
-                colors: true,
-                chunks: false,
-                modules: false,
-                children: false,
-            },
-        };
         config.plugins = [
             new HtmlWebpackPlugin({
                 inject: 'head',
