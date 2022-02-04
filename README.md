@@ -13,7 +13,7 @@ npm install --save jdom
 import {
    domFactory, svgFactory,
    on, once, off, dispatch,
-   style, hasClass, addClass, removeClass
+   style
 } from 'jdom';
 ```
 
