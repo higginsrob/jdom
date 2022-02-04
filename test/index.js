@@ -5,7 +5,7 @@ const WebpackDevServer = require('webpack-dev-server');
 const webpackConfig = require('../webpack.config')();
 
 const compiler = Webpack(webpackConfig);
-const server = new WebpackDevServer(compiler, webpackConfig.devServer);
+const server = new WebpackDevServer(compiler, webpackConfig.devServer || {});
 const Browser = require('zombie');
 
 describe('JDOM Headless Browser Testing\n', function() {

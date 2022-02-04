@@ -28,27 +28,10 @@ module.exports = function(env) {
             ],
         },
         devtool: !isProduction && 'source-map',
-        devServer: {
-            inline: false,
-            stats: {
-                colors: true,
-                chunks: false,
-                modules: false,
-                children: false,
-            },
-        },
+        devServer: {},
         resolve: {
             modules: ['node_modules'],
             extensions: ['.js'],
-        },
-        context,
-        target: 'web',
-        stats: {
-            colors: true,
-            chunks: false,
-            modules: false,
-            children: false,
-            warnings: false,
         },
     };
     if (!isProduction) {

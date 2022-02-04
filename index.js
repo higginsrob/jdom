@@ -1,5 +1,3 @@
-const qs = require('querystring');
-
 const factory = function(tag, props, ns) {
     if (!tag) {
         return;
@@ -317,7 +315,13 @@ svgElements.forEach(elem => {
     svgFactory[elem.toLowerCase()] = svgFactory[elem];
 });
 
-const query = window && qs.parse(window.location.search.substr(1));
+// window query
+const query = (module.exports.query = {});
+const searchParams = new URLSearchParams(document.location.search);
+searchParams.forEach((key, value) => {
+    query[key] = value;
+});
+
 module.exports.Inputs = function(inputs) {
     if (Array.isArray(inputs)) {
         const container = domFactory.DIV({className: 'jdom-inputs-container'});
