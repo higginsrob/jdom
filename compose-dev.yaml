@@ -1,0 +1,42 @@
+services:
+  jdom:
+    entrypoint:
+    - sleep
+    - infinity
+    image: freshstacks/debian-devcontainer
+    init: true
+    networks:
+    - freshstacks
+    environment:
+      FRESHSTACK_USER_HOME: ~
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+      PGHOST: postgres
+      PGUSER: postgres
+      REDIS_HOST: redis-server
+      MYSQL_HOST: mysql-server
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE: mysql
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: mysql
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
+    volumes:
+    - type: bind
+      source: /var/run/docker.sock
+      target: /var/run/docker.sock
+    - type: bind
+      source: ~/.gitconfig
+      target: /home/freshstack/.gitconfig
+      read_only: true
+    - type: bind
+      source: ~/.ssh
+      target: /home/freshstack/.ssh
+      read_only: true
+
+networks:
+  freshstacks:
+
+volumes:
+  freshstacks:
