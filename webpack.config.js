@@ -1,30 +1,36 @@
-const path = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const context = __dirname
-const build = path.join(context, 'dist')
+const context = __dirname;
+const build = path.join(context, 'dist');
+const src = path.join(context, 'src');
+const test = path.join(context, 'test');
 
-module.exports = function (env) {
-    const isProduction = env && env.NODE_ENV === 'production'
+module.exports = function (env, props) {
+    console.log('WEBPACK BUILD: ', {
+        env,
+        props,
+        dirs: { context, build, src, test },
+    });
+    const isProduction = props.mode === 'production';
     const config = {
-        mode: isProduction ? 'production' : 'development',
+        mode: props.mode,
         entry: {
-            jdom: path.join(context, 'index.js'),
+            jdom: path.join(src, 'index.ts'),
+            zombie: path.join(src, 'zombie', 'index.ts'),
         },
         output: {
             path: build,
             filename: '[name].js',
-            library: ['jdom'],
+            library: ['[name]'],
             libraryTarget: 'umd',
             clean: true,
         },
         module: {
             rules: [
                 {
-                    test: /\.js$/,
-                    enforce: 'pre',
-                    include: path.join(context, 'index.js'),
-                    use: ['eslint-loader'],
+                    test: /\.ts$/,
+                    use: 'ts-loader',
                 },
             ],
         },
@@ -32,16 +38,13 @@ module.exports = function (env) {
         devServer: {},
         resolve: {
             modules: ['node_modules'],
-            extensions: ['.js'],
+            extensions: ['.js', '.mjs', '.ts'],
         },
-    }
+    };
     if (!isProduction) {
-        config.plugins = [
-            new HtmlWebpackPlugin({
-                inject: 'head',
-                template: path.join(context, 'test', 'template.html'),
-            }),
-        ]
+        config.plugins = [new HtmlWebpackPlugin({
+            chunks: ['zombie']
+        })];
     }
-    return config
-}
+    return config;
+};

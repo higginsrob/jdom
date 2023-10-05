@@ -5,19 +5,15 @@ services:
     - infinity
     image: freshstacks/debian-devcontainer
     init: true
-    networks:
-    - freshstacks
     volumes:
     - type: bind
       source: /var/run/docker.sock
       target: /var/run/docker.sock
-      read_only: true
-    - type: volume
-      source: freshstacks
-      target: /fs
-
-networks:
-  freshstacks:
+    - freshstacks:/fs
 
 volumes:
+  freshstacks:
+    external: true
+
+networks:
   freshstacks:
