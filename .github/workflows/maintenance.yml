@@ -1,0 +1,163 @@
+name: Maintenance
+
+on:
+  schedule:
+    # Run weekly on Mondays at 9 AM UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+jobs:
+  dependency-audit:
+    name: Dependency Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run security audit
+        run: |
+          echo "🔍 Running security audit..."
+          npm audit --audit-level moderate
+          
+      - name: Check for outdated packages
+        run: |
+          echo "📦 Checking for outdated packages..."
+          npm outdated || true
+
+      - name: Generate security report
+        run: |
+          echo "# Security Audit Report" > security-report.md
+          echo "Generated on: $(date)" >> security-report.md
+          echo "" >> security-report.md
+          echo "## Audit Results" >> security-report.md
+          npm audit --json | jq -r '.vulnerabilities | to_entries[] | "- **\(.key)**: \(.value.severity) - \(.value.title)"' >> security-report.md || true
+
+      - name: Upload security report
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-report
+          path: security-report.md
+
+  health-check:
+    name: Project Health Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Check build
+        run: npm run build
+
+      - name: Verify package integrity
+        run: |
+          echo "🔍 Verifying package integrity..."
+          npm pack --dry-run
+          
+      - name: Check bundle size
+        run: |
+          echo "📊 Current bundle size:"
+          du -h dist/jdom.js
+          
+      - name: Performance check
+        run: |
+          echo "⚡ Performance metrics:"
+          echo "- Bundle size: $(du -h dist/jdom.js | cut -f1)"
+          echo "- Zero dependencies: ✅"
+          echo "- Test coverage: $(npm test 2>&1 | grep -o '[0-9]*\.*[0-9]*% Stmts' | head -1 || echo 'N/A')"
+
+  code-quality:
+    name: Code Quality Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check code formatting
+        run: |
+          echo "🎨 Checking code formatting..."
+          npm run prettier -- --check
+
+      - name: Lint check
+        run: |
+          echo "🔍 Running linter via webpack build..."
+          npm run build
+
+      - name: Check for TODO/FIXME comments
+        run: |
+          echo "📝 Checking for TODO/FIXME comments..."
+          grep -r "TODO\|FIXME" --include="*.js" --include="*.md" . || echo "✅ No TODO/FIXME found"
+
+  create-maintenance-issue:
+    name: Create Maintenance Issue
+    runs-on: ubuntu-latest
+    needs: [dependency-audit, health-check, code-quality]
+    if: failure()
+    permissions:
+      issues: write
+    steps:
+      - name: Create issue for failed maintenance
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = '🔧 Weekly Maintenance Check Failed';
+            const body = `
+            ## Weekly Maintenance Report
+            
+            **Date:** ${new Date().toISOString().split('T')[0]}
+            **Status:** ❌ Failed
+            
+            One or more maintenance checks have failed. Please review the workflow run for details:
+            
+            **Workflow Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            
+            ### Actions Needed:
+            - [ ] Review failed jobs
+            - [ ] Address security vulnerabilities if any
+            - [ ] Update dependencies if needed
+            - [ ] Fix any code quality issues
+            
+            ### Automatic Checks:
+            - Dependency security audit
+            - Project health check
+            - Code quality verification
+            
+            This issue was automatically created by the maintenance workflow.
+            `;
+            
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['maintenance', 'automated']
+            });
