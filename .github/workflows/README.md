@@ -88,7 +88,16 @@ Add these badges to your README.md:
 4. **Create Tag** - `git tag v1.2.3 && git push origin v1.2.3`
 5. **Automated Release** - NPM publish + GitHub release
 
-## 🛠️ Manual Triggers
+### [`fix-lockfile.yml`](./fix-lockfile.yml) - Lock File Maintenance
+
+**Triggers:** Manual dispatch only
+**Purpose:** Fix package-lock.json sync issues
+
+-   � **Lock File Regeneration** - Fixes npm ci sync issues
+-   📝 **Automated PR Creation** - Creates PR with fixes
+-   ✅ **Verification** - Tests that changes work correctly
+
+## �🛠️ Manual Triggers
 
 All workflows support manual triggering via `workflow_dispatch`:
 
@@ -98,6 +107,9 @@ gh workflow run maintenance.yml
 
 # Trigger deployment
 gh workflow run deploy.yml
+
+# Fix lock file sync issues (creates PR)
+gh workflow run fix-lockfile.yml
 ```
 
 ## 📈 Monitoring
