@@ -1,136 +1,710 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="UTF-8">
-		<meta http-equiv="Content-Language" content="en">
-    </head>
-    <body>
-        <script>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JDOM.js - Lightweight DOM Builder</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header .version {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+        
+        .header p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .install-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .install-code {
+            background: rgba(0,0,0,0.8);
+            color: #00ff88;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 1.1rem;
+            display: inline-block;
+            margin: 10px;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        
+        .demo-area {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .demo-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #5a6fd8;
+        }
+        
+        .btn.secondary {
+            background: #6c757d;
+        }
+        
+        .btn.secondary:hover {
+            background: #5a6268;
+        }
+        
+        .demo-output {
+            min-height: 200px;
+            border: 2px dashed #dee2e6;
+            border-radius: 6px;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            opacity: 0.8;
+        }
+        
+        .footer a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>JDOM.js</h1>
+            <div class="version">v3.2.5</div>
+            <p>Lightweight, Zero-Dependency DOM Builder</p>
+            <p>Functional approach to creating and manipulating DOM elements with ease</p>
+        </div>
 
-            const DOM = jdom.domFactory;
-            const SVG = jdom.svgFactory;
-            const $ = jdom.$
+        <div class="install-section">
+            <div class="install-code">npm install jdom</div>
+            <div class="install-code">yarn add jdom</div>
+        </div>
 
-            function createElements () {
-                jdom.domElements.forEach(elem => {
-                    DOM[elem]({
-                        parent: document.body,
-                        id: elem
+        <div class="content-grid">
+            <div class="card">
+                <h3>🚀 Simple & Fast</h3>
+                <p>Zero dependencies, lightweight library that focuses on performance and simplicity.</p>
+                <div class="code-block">const {DIV, SPAN} = jdom.domFactory;
+const element = DIV({
+  className: 'container',
+  children: ['Hello World']
+});</div>
+            </div>
+
+            <div class="card">
+                <h3>🎨 Functional Design</h3>
+                <p>Create elements using a clean, functional API with property-based configuration.</p>
+                <div class="code-block">const button = BUTTON({
+  parent: document.body,
+  children: ['Click me'],
+  click: () => alert('Hello!'),
+  style: { background: 'blue' }
+});</div>
+            </div>
+
+            <div class="card">
+                <h3>🖼️ SVG Support</h3>
+                <p>Full SVG element creation with proper namespacing and attribute handling.</p>
+                <div class="code-block">const {svg, circle} = jdom.svgFactory;
+const icon = svg({
+  children: [circle({
+    cx: 50, cy: 50, r: 25,
+    fill: 'red'
+  })]
+});</div>
+            </div>
+
+            <div class="card">
+                <h3>🔧 jQuery-like Utilities</h3>
+                <p>Built-in selector engine and utility functions for DOM manipulation.</p>
+                <div class="code-block">const $ = jdom.$;
+$('.myClass').style({color: 'red'});
+$('#myId').addClass('active');</div>
+            </div>
+        </div>
+
+        <div class="demo-area">
+            <h3>🎪 Interactive Demo</h3>
+            <div class="demo-controls">
+                <button class="btn" onclick="createBasicElements()">Create Elements</button>
+                <button class="btn" onclick="createStyledCard()">Styled Card</button>
+                <button class="btn" onclick="createSvgDemo()">SVG Animation</button>
+                <button class="btn" onclick="createInteractiveList()">Interactive List</button>
+                <button class="btn secondary" onclick="clearDemo()">Clear Demo</button>
+            </div>
+            <div id="demo-output" class="demo-output">
+                <p style="text-align: center; color: #6c757d; font-style: italic;">
+                    Click a button above to see JDOM in action!
+                </p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Created with ❤️ by <a href="https://github.com/higginsrob">Rob Higgins</a></p>
+            <p><a href="https://github.com/higginsrob/jdom">View on GitHub</a> | <a href="https://www.npmjs.com/package/jdom">NPM Package</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Initialize JDOM after library loads
+        let DOM, SVG, $;
+        let demoOutput;
+        
+        function initJDOM() {
+            if (typeof jdom !== 'undefined') {
+                DOM = jdom.domFactory;
+                SVG = jdom.svgFactory;
+                $ = jdom.$;
+                demoOutput = document.getElementById('demo-output');
+            }
+        }
+
+        function clearDemo() {
+            if (demoOutput) {
+                demoOutput.innerHTML = '<p style="text-align: center; color: #6c757d; font-style: italic;">Demo cleared! Click a button above to see JDOM in action!</p>';
+            }
+        }
+
+        function createBasicElements() {
+            initJDOM();
+            clearDemo();
+            
+            const container = DOM.DIV({
+                parent: demoOutput,
+                style: {
+                    padding: '20px',
+                    background: 'linear-gradient(45deg, #ff6b6b, #4ecdc4)',
+                    borderRadius: '8px',
+                    color: 'white',
+                    textAlign: 'center'
+                },
+                children: [
+                    DOM.H2({children: ['Basic Elements Demo']}),
+                    DOM.P({children: ['This paragraph was created with JDOM!']}),
+                    DOM.UL({
+                        style: { listStyle: 'none', padding: 0 },
+                        children: [
+                            DOM.LI({children: ['✨ Zero dependencies']}),
+                            DOM.LI({children: ['🚀 Functional API']}),
+                            DOM.LI({children: ['💡 Easy to use']})
+                        ]
+                    })
+                ]
+            });
+        }
+
+        function createStyledCard() {
+            initJDOM();
+            clearDemo();
+            
+            const card = DOM.DIV({
+                parent: demoOutput,
+                style: {
+                    background: 'white',
+                    borderRadius: '12px',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+                    padding: '24px',
+                    maxWidth: '400px',
+                    margin: '20px auto',
+                    border: '1px solid #e9ecef'
+                },
+                children: [
+                    DOM.H3({
+                        children: ['🎨 Styled Card'],
+                        style: { 
+                            color: '#667eea',
+                            marginBottom: '16px',
+                            fontSize: '1.5rem'
+                        }
+                    }),
+                    DOM.P({
+                        children: ['This beautiful card was created entirely with JDOM using inline styles and nested elements.'],
+                        style: {
+                            color: '#555',
+                            lineHeight: '1.6',
+                            marginBottom: '16px'
+                        }
+                    }),
+                    DOM.BUTTON({
+                        children: ['Click Me!'],
+                        style: {
+                            background: '#667eea',
+                            color: 'white',
+                            border: 'none',
+                            padding: '10px 20px',
+                            borderRadius: '6px',
+                            cursor: 'pointer',
+                            fontSize: '1rem'
+                        },
+                        click: function() {
+                            this.style.background = this.style.background === 'rgb(102, 126, 234)' ? '#28a745' : '#667eea';
+                            this.textContent = this.textContent === 'Click Me!' ? 'Clicked! 🎉' : 'Click Me!';
+                        }
+                    })
+                ]
+            });
+        }
+
+        function createSvgDemo() {
+            initJDOM();
+            clearDemo();
+            
+            const svgContainer = SVG.svg({
+                parent: demoOutput,
+                width: '100%',
+                height: 200,
+                viewBox: '0 0 400 200',
+                style: {
+                    background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                    borderRadius: '8px',
+                    margin: '20px 0'
+                },
+                children: [
+                    SVG.circle({
+                        cx: 100,
+                        cy: 100,
+                        r: 40,
+                        fill: '#ff6b6b',
+                        children: [
+                            SVG.animateTransform({
+                                attributeName: 'transform',
+                                type: 'rotate',
+                                values: '0 100 100;360 100 100',
+                                dur: '3s',
+                                repeatCount: 'indefinite'
+                            })
+                        ]
+                    }),
+                    SVG.rect({
+                        x: 200,
+                        y: 60,
+                        width: 80,
+                        height: 80,
+                        fill: '#4ecdc4',
+                        rx: 10,
+                        children: [
+                            SVG.animateTransform({
+                                attributeName: 'transform',
+                                type: 'scale',
+                                values: '1;1.2;1',
+                                dur: '2s',
+                                repeatCount: 'indefinite'
+                            })
+                        ]
+                    }),
+                    SVG.polygon({
+                        points: '340,60 380,140 300,140',
+                        fill: '#ffd93d',
+                        children: [
+                            SVG.animateTransform({
+                                attributeName: 'transform',
+                                type: 'rotate',
+                                values: '0 340 113;360 340 113',
+                                dur: '4s',
+                                repeatCount: 'indefinite'
+                            })
+                        ]
+                    }),
+                    SVG.text({
+                        x: 200,
+                        y: 180,
+                        textAnchor: 'middle',
+                        fill: 'white',
+                        fontSize: '16',
+                        fontFamily: 'Arial, sans-serif',
+                        children: ['SVG Animation with JDOM']
+                    })
+                ]
+            });
+        }
+
+        function createInteractiveList() {
+            initJDOM();
+            clearDemo();
+            
+            let itemCounter = 0;
+            
+            const container = DOM.DIV({
+                parent: demoOutput,
+                style: {
+                    background: 'white',
+                    borderRadius: '8px',
+                    padding: '20px',
+                    border: '1px solid #dee2e6'
+                },
+                children: [
+                    DOM.H3({
+                        children: ['📋 Interactive Todo List'],
+                        style: { 
+                            color: '#333',
+                            marginBottom: '20px'
+                        }
+                    }),
+                    DOM.DIV({
+                        style: { 
+                            display: 'flex',
+                            gap: '10px',
+                            marginBottom: '20px'
+                        },
+                        children: [
+                            DOM.INPUT({
+                                id: 'todoInput',
+                                type: 'text',
+                                placeholder: 'Add a new task...',
+                                style: {
+                                    flex: '1',
+                                    padding: '10px',
+                                    border: '2px solid #dee2e6',
+                                    borderRadius: '6px',
+                                    fontSize: '1rem'
+                                },
+                                keydown: function(e) {
+                                    if (e.key === 'Enter') {
+                                        addTodoItem();
+                                    }
+                                }
+                            }),
+                            DOM.BUTTON({
+                                children: ['Add'],
+                                style: {
+                                    padding: '10px 20px',
+                                    background: '#28a745',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '6px',
+                                    cursor: 'pointer'
+                                },
+                                click: addTodoItem
+                            })
+                        ]
+                    }),
+                    DOM.UL({
+                        id: 'todoList',
+                        style: {
+                            listStyle: 'none',
+                            padding: 0
+                        }
+                    })
+                ]
+            });
+            
+            function addTodoItem() {
+                const input = document.getElementById('todoInput');
+                const list = document.getElementById('todoList');
+                const text = input.value.trim();
+                
+                if (text) {
+                    itemCounter++;
+                    const listItem = DOM.LI({
+                        parent: list,
+                        style: {
+                            display: 'flex',
+                            alignItems: 'center',
+                            padding: '10px',
+                            background: '#f8f9fa',
+                            margin: '5px 0',
+                            borderRadius: '6px',
+                            border: '1px solid #dee2e6'
+                        },
+                        children: [
+                            DOM.INPUT({
+                                type: 'checkbox',
+                                style: { marginRight: '10px' },
+                                change: function() {
+                                    const span = this.parentNode.querySelector('span');
+                                    span.style.textDecoration = this.checked ? 'line-through' : 'none';
+                                    span.style.opacity = this.checked ? '0.6' : '1';
+                                }
+                            }),
+                            DOM.SPAN({
+                                children: [text],
+                                style: { 
+                                    flex: '1',
+                                    fontSize: '1rem'
+                                }
+                            }),
+                            DOM.BUTTON({
+                                children: ['×'],
+                                style: {
+                                    background: '#dc3545',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '4px',
+                                    width: '30px',
+                                    height: '30px',
+                                    cursor: 'pointer',
+                                    fontSize: '1.2rem'
+                                },
+                                click: function() {
+                                    this.parentNode.remove();
+                                }
+                            })
+                        ]
                     });
-                });
-                return jdom.domElements.every(elem => {
-                    return $('#' + elem).length === 1;
-                });
+                    
+                    input.value = '';
+                    input.focus();
+                }
             }
+        }
 
-            function updateElement () {
-                const div = DOM.DIV({id: 'a'});
-                jdom.updateElement(div, {id: 'b'});
-                return div.id === 'b';
-            }
-
-            function setStyle () {
-                const div = DOM.DIV({id: 'a'});
-                jdom.style(div, {
-                    color: 'red'
-                });
-                return div.style.color === 'red';
-            }
-
-            function createSvgElements () {
-                const svg = SVG.svg();
-                jdom.svgElements.forEach(elem => {
-                    SVG[elem]({
-                        parent: svg,
-                        id: elem
-                    });
-                });
-                return jdom.svgElements.every(elem => {
-                    return $('#' + elem, svg).length === 1;
-                });
-            }
-
-            let svg;
-
-            function createSvgDocument () {
-                svg = SVG.svg({
+        // Test functions for compatibility with existing test suite
+        function createElements () {
+            initJDOM();
+            jdom.domElements.forEach(elem => {
+                DOM[elem]({
                     parent: document.body,
-                    width: 200,
-                    height: 100,
-                    children: [
-                        SVG.RECT({
-                            x: 0,
-                            y: 0,
-                            width: 100,
-                            height: 100,
-                            fill: 'red'
-                        }),
-                        SVG.RECT({
-                            x: 100,
-                            y: 0,
-                            width: 100,
-                            height: 100,
-                            fill: 'blue'
-                        }),
-                        SVG.CIRCLE({
-                            cx: 100,
-                            cy: 50,
-                            r: 50,
-                            fill: 'green',
-                            'fill-opacity': 0.75,
-                            children: [
-                                SVG.animateTransform({
-                                    attributeName: 'transform',
-                                    attributeType: 'XML',
-                                    type: 'scale',
-                                    from: '1',
-                                    to: '0.5',
-                                    dur: '3s',
-                                    repeatCount: 'indefinite'
-                                })
-                            ]
-                        })
-                    ]
+                    id: elem
                 });
-                return svg.childNodes.length === 3;
-            }
+            });
+            return jdom.domElements.every(elem => {
+                return $('#' + elem).length === 1;
+            });
+        }
 
-            function updateSvgDocument() {
-                const $svg = $(svg);
-                $svg.style({border: '2px solid red'});
-                return svg.style.border === '2px solid red';
-            }
+        function updateElement () {
+            initJDOM();
+            const div = DOM.DIV({id: 'a'});
+            jdom.updateElement(div, {id: 'b'});
+            return div.id === 'b';
+        }
 
-            function removeSvgDocument() {
-                svg.remove();
-                delete svg;
-                return $('svg').length === 0;
-            }
+        function setStyle () {
+            initJDOM();
+            const div = DOM.DIV({id: 'a'});
+            jdom.style(div, {
+                color: 'red'
+            });
+            return div.style.color === 'red';
+        }
 
-            function selector () {
-                const div = DOM.DIV({
-                    id: 'a',
-                    parent: document.body
+        function createSvgElements () {
+            initJDOM();
+            const svg = SVG.svg();
+            jdom.svgElements.forEach(elem => {
+                SVG[elem]({
+                    parent: svg,
+                    id: elem
                 });
-                const $div = $('#a');
-                return $div[0].id === 'a';
-            }
+            });
+            return jdom.svgElements.every(elem => {
+                return $('#' + elem, svg).length === 1;
+            });
+        }
 
-            function addClass () {
-                const div = DOM.DIV({id: 'a'});
-                const $div = $('#a');
-                $div.addClass('myClass');
-                return $div.hasClass('myClass');
-            }
+        let svg;
 
-            function removeClass () {
-                const div = DOM.DIV({id: 'a', className: 'myClass'});
-                const $div = $('#a');
-                $div.removeClass('myClass');
-                return !$div.hasClass('myClass');
-            }
+        function createSvgDocument () {
+            initJDOM();
+            svg = SVG.svg({
+                parent: document.body,
+                width: 200,
+                height: 100,
+                children: [
+                    SVG.RECT({
+                        x: 0,
+                        y: 0,
+                        width: 100,
+                        height: 100,
+                        fill: 'red'
+                    }),
+                    SVG.RECT({
+                        x: 100,
+                        y: 0,
+                        width: 100,
+                        height: 100,
+                        fill: 'blue'
+                    }),
+                    SVG.CIRCLE({
+                        cx: 100,
+                        cy: 50,
+                        r: 50,
+                        fill: 'green',
+                        'fill-opacity': 0.75,
+                        children: [
+                            SVG.animateTransform({
+                                attributeName: 'transform',
+                                attributeType: 'XML',
+                                type: 'scale',
+                                from: '1',
+                                to: '0.5',
+                                dur: '3s',
+                                repeatCount: 'indefinite'
+                            })
+                        ]
+                    })
+                ]
+            });
+            return svg.childNodes.length === 3;
+        }
 
-        </script>
-    </body>
+        function updateSvgDocument() {
+            initJDOM();
+            const $svg = $(svg);
+            $svg.style({border: '2px solid red'});
+            return svg.style.border === '2px solid red';
+        }
+
+        function removeSvgDocument() {
+            initJDOM();
+            svg.remove();
+            delete svg;
+            return $('svg').length === 0;
+        }
+
+        function selector () {
+            initJDOM();
+            const div = DOM.DIV({
+                id: 'a',
+                parent: document.body
+            });
+            const $div = $('#a');
+            return $div[0].id === 'a';
+        }
+
+        function addClass () {
+            initJDOM();
+            const div = DOM.DIV({id: 'a'});
+            const $div = $('#a');
+            $div.addClass('myClass');
+            return $div.hasClass('myClass');
+        }
+
+        function removeClass () {
+            initJDOM();
+            const div = DOM.DIV({id: 'a', className: 'myClass'});
+            const $div = $('#a');
+            $div.removeClass('myClass');
+            return !$div.hasClass('myClass');
+        }
+        
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if jdom is already loaded
+            if (typeof jdom !== 'undefined') {
+                initJDOM();
+            } else {
+                // Wait for jdom to load
+                const checkJDOM = setInterval(function() {
+                    if (typeof jdom !== 'undefined') {
+                        clearInterval(checkJDOM);
+                        initJDOM();
+                    }
+                }, 100);
+            }
+        });
+    </script>
+</body>
 </html>
 

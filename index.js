@@ -310,7 +310,6 @@ svgElements.forEach(elem => {
     svgFactory[elem] = function(props, ...children) {
         return createElementNS(defaultNameSpace, elem, props, ...children);
     };
-    svgFactory[elem] = svgFactory[elem];
     svgFactory[elem.toUpperCase()] = svgFactory[elem];
     svgFactory[elem.toLowerCase()] = svgFactory[elem];
 });

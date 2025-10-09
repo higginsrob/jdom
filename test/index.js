@@ -6,7 +6,7 @@ const webpackConfig = require('../webpack.config')();
 const puppeteer = require('puppeteer');
 
 const compiler = Webpack(webpackConfig);
-const server = new WebpackDevServer(compiler, webpackConfig.devServer || {});
+const server = new WebpackDevServer(webpackConfig.devServer || {}, compiler);
 let browser, page;
 
 describe('JDOM Headless Browser Testing\n', function() {
@@ -14,13 +14,12 @@ describe('JDOM Headless Browser Testing\n', function() {
         this.timeout(30000);
 
         // Start webpack dev server
-        await new Promise(resolve => {
+        await new Promise((resolve, reject) => {
             compiler.hooks.done.tap('done', () => {
-                server.listen(8080, 'localhost', () => {
-                    console.log('\n');
-                    resolve();
-                });
+                resolve();
             });
+
+            server.start().catch(reject);
         });
 
         // Launch Puppeteer browser
@@ -110,7 +109,7 @@ describe('JDOM Headless Browser Testing\n', function() {
             await browser.close();
         }
         if (server) {
-            server.close();
+            await server.stop();
         }
     });
 });

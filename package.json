@@ -3,16 +3,18 @@
     "version": "3.2.5",
     "description": "lightweight dom builder",
     "main": "index.js",
+    "type": "commonjs",
     "scripts": {
         "predocs": "rm -rf docs",
         "preversion": "npm run prettier",
         "prettier": "prettier --loglevel=error --write '**/*.js' '**/*.json' '**/*.jsx' '**/*.css' '**/*.md'",
-        "start": "node --openssl-legacy-provider ./node_modules/.bin/webpack-dev-server",
+        "lint": "eslint index.js",
+        "start": "webpack serve",
         "prebuild": "rm -rf ./dist",
-        "build": "node --openssl-legacy-provider ./node_modules/.bin/webpack-cli --env NODE_ENV=production",
+        "build": "webpack --env NODE_ENV=production",
         "pretest": "npm run build",
         "posttest": "rm -rf ./dist",
-        "test": "node --openssl-legacy-provider ./node_modules/.bin/mocha test"
+        "test": "mocha test"
     },
     "author": "Rob Higgins <higginsrob@gmail.com>",
     "license": "MIT",
@@ -48,20 +50,20 @@
         ]
     },
     "devDependencies": {
-        "babel-eslint": "^10.0.3",
-        "eslint": "^6.8.0",
+        "@eslint/eslintrc": "^3.3.1",
+        "@eslint/js": "^9.37.0",
+        "eslint": "^9.37.0",
         "eslint-config-prettier": "^6.9.0",
-        "eslint-loader": "^2.2.1",
         "eslint-plugin-prettier": "^3.1.2",
-        "html-webpack-plugin": "^3.2.0",
+        "eslint-webpack-plugin": "^5.0.2",
+        "html-webpack-plugin": "^5.6.4",
         "husky": "^3.1.0",
         "lint-staged": "^12.3.3",
-        "mocha": "^9.2.0",
+        "mocha": "^11.7.4",
         "prettier": "^1.19.1",
-        "prettier-eslint": "^13.0.0",
         "puppeteer": "^24.23.0",
-        "webpack": "^4.46.0",
-        "webpack-cli": "^3.3.12",
-        "webpack-dev-server": "^3.11.3"
+        "webpack": "^5.102.1",
+        "webpack-cli": "^6.0.1",
+        "webpack-dev-server": "^5.2.2"
     }
 }
