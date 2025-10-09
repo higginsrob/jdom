@@ -1,11 +1,15 @@
-const js = require('@eslint/js');
+// Add structuredClone polyfill for older Node.js versions
+if (typeof globalThis.structuredClone === 'undefined') {
+    globalThis.structuredClone = obj => {
+        return JSON.parse(JSON.stringify(obj));
+    };
+}
 
 module.exports = [
-    js.configs.recommended,
     {
         languageOptions: {
             ecmaVersion: 2022,
-            sourceType: 'module',
+            sourceType: 'script', // Changed from 'module' to 'script' for better compatibility
             globals: {
                 // Browser globals
                 window: 'readonly',
@@ -28,9 +32,19 @@ module.exports = [
             },
         },
         rules: {
-            'no-loop-func': 'warn',
+            // Essential rules only to avoid any compatibility issues
             'no-undef': 'warn',
             'no-unused-vars': 'warn',
+            'no-debugger': 'error',
+            'no-dupe-keys': 'error',
+            'no-duplicate-case': 'error',
+            'no-empty': 'error',
+            'no-func-assign': 'error',
+            'no-unreachable': 'error',
+            'valid-typeof': 'error',
+
+            // Custom project rules
+            'no-loop-func': 'warn',
             curly: 'warn',
             quotes: ['warn', 'single'],
             eqeqeq: 'warn',
