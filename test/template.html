@@ -4,6 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JDOM.js - Lightweight DOM Builder</title>
+   
+    <!-- Google Analytics - Only loads in production -->
+    <script>
+        // Only load Google Analytics in production (not localhost)
+        const isLocalHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        if (!isLocalHost) {
+            // Load gtag.js script
+            var script = document.createElement('script');
+            script.async = true;
+            script.src = 'https://www.googletagmanager.com/gtag/js?id=G-L77Y7KL64B';
+            document.head.appendChild(script);
+        }
+        // Initialize Google Analytics
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+            if (isLocalHost) {
+                console.log('GA:', [...arguments]);
+            } else {
+                dataLayer.push(arguments);
+            }
+        }
+        gtag('js', new Date());
+        gtag('config', 'G-L77Y7KL64B');
+    </script>
+
     <style>
         * {
             margin: 0;
@@ -271,12 +296,30 @@ $('#myId').addClass('active');</div>
         }
 
         function clearDemo() {
+            // Track GA event
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'button_click', {
+                    'event_category': 'Demo',
+                    'event_label': 'Clear Demo',
+                    'value': 1
+                });
+            }
+            
             if (demoOutput) {
                 demoOutput.innerHTML = '<p style="text-align: center; color: #6c757d; font-style: italic;">Demo cleared! Click a button above to see JDOM in action!</p>';
             }
         }
 
         function createBasicElements() {
+            // Track GA event
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'button_click', {
+                    'event_category': 'Demo',
+                    'event_label': 'Create Elements',
+                    'value': 1
+                });
+            }
+            
             initJDOM();
             clearDemo();
             
@@ -305,6 +348,15 @@ $('#myId').addClass('active');</div>
         }
 
         function createStyledCard() {
+            // Track GA event
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'button_click', {
+                    'event_category': 'Demo',
+                    'event_label': 'Styled Card',
+                    'value': 1
+                });
+            }
+            
             initJDOM();
             clearDemo();
             
@@ -348,6 +400,15 @@ $('#myId').addClass('active');</div>
                             fontSize: '1rem'
                         },
                         click: function() {
+                            // Track GA event
+                            if (typeof gtag !== 'undefined') {
+                                gtag('event', 'button_click', {
+                                    'event_category': 'Interactive Element',
+                                    'event_label': 'Styled Card Button',
+                                    'value': 1
+                                });
+                            }
+                            
                             this.style.background = this.style.background === 'rgb(102, 126, 234)' ? '#28a745' : '#667eea';
                             this.textContent = this.textContent === 'Click Me!' ? 'Clicked! 🎉' : 'Click Me!';
                         }
@@ -357,6 +418,15 @@ $('#myId').addClass('active');</div>
         }
 
         function createSvgDemo() {
+            // Track GA event
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'button_click', {
+                    'event_category': 'Demo',
+                    'event_label': 'SVG Animation',
+                    'value': 1
+                });
+            }
+            
             initJDOM();
             clearDemo();
             
@@ -430,6 +500,15 @@ $('#myId').addClass('active');</div>
         }
 
         function createInteractiveList() {
+            // Track GA event
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'button_click', {
+                    'event_category': 'Demo',
+                    'event_label': 'Interactive List',
+                    'value': 1
+                });
+            }
+            
             initJDOM();
             clearDemo();
             
@@ -505,6 +584,15 @@ $('#myId').addClass('active');</div>
                 const text = input.value.trim();
                 
                 if (text) {
+                    // Track GA event
+                    if (typeof gtag !== 'undefined') {
+                        gtag('event', 'todo_interaction', {
+                            'event_category': 'Interactive List',
+                            'event_label': 'Add Todo Item',
+                            'value': 1
+                        });
+                    }
+                    
                     itemCounter++;
                     const listItem = DOM.LI({
                         parent: list,
@@ -522,6 +610,15 @@ $('#myId').addClass('active');</div>
                                 type: 'checkbox',
                                 style: { marginRight: '10px' },
                                 change: function() {
+                                    // Track GA event
+                                    if (typeof gtag !== 'undefined') {
+                                        gtag('event', 'todo_interaction', {
+                                            'event_category': 'Interactive List',
+                                            'event_label': this.checked ? 'Complete Todo' : 'Uncomplete Todo',
+                                            'value': 1
+                                        });
+                                    }
+                                    
                                     const span = this.parentNode.querySelector('span');
                                     span.style.textDecoration = this.checked ? 'line-through' : 'none';
                                     span.style.opacity = this.checked ? '0.6' : '1';
@@ -547,6 +644,15 @@ $('#myId').addClass('active');</div>
                                     fontSize: '1.2rem'
                                 },
                                 click: function() {
+                                    // Track GA event
+                                    if (typeof gtag !== 'undefined') {
+                                        gtag('event', 'todo_interaction', {
+                                            'event_category': 'Interactive List',
+                                            'event_label': 'Delete Todo',
+                                            'value': 1
+                                        });
+                                    }
+                                    
                                     this.parentNode.remove();
                                 }
                             })
