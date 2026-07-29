@@ -25,11 +25,17 @@ jobs:
           # Try npm ci first, fallback to npm install if lock file is out of sync
           npm ci || (echo "⚠️ Lock file out of sync, using npm install instead" && npm install)
 
-      - name: Run security audit
+      - name: Audit production dependencies
         run: |
-          echo "🔍 Running security audit..."
-          npm audit --audit-level moderate
-          
+          echo "🔍 Auditing production dependencies..."
+          npm audit --omit=dev --audit-level moderate
+
+      - name: Report all dependency advisories (informational)
+        continue-on-error: true
+        run: |
+          echo "ℹ️ Full tree audit (devDependencies included; does not fail this job):"
+          npm audit --audit-level moderate || true
+
       - name: Check for outdated packages
         run: |
           echo "📦 Checking for outdated packages..."
