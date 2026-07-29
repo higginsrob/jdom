@@ -63,29 +63,44 @@ jobs:
               <title>JDOM.js Demo</title>
               <script src="./jdom.js"></script>
               <style>
+                  :root {
+                      --bg: #0a0a0a;
+                      --surface: #1a1a1a;
+                      --border: #2a2a2a;
+                      --text: #f0f0f0;
+                      --muted: #a0a0a0;
+                      --white: #ffffff;
+                  }
                   body {
-                      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                      font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
                       line-height: 1.6;
                       margin: 0;
                       padding: 20px;
-                      background: #f5f5f5;
+                      color: var(--text);
+                      background:
+                          radial-gradient(ellipse 80% 50% at 50% -20%, #1f1f1f 0%, transparent 55%),
+                          linear-gradient(180deg, #0d0d0d 0%, var(--bg) 40%, #050505 100%);
+                      min-height: 100vh;
                   }
                   .container {
                       max-width: 800px;
                       margin: 0 auto;
-                      background: white;
+                      background: var(--surface);
+                      border: 1px solid var(--border);
                       padding: 30px;
                       border-radius: 8px;
-                      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
                   }
                   .demo-section {
                       margin: 30px 0;
                       padding: 20px;
-                      border: 1px solid #eee;
+                      border: 1px solid var(--border);
                       border-radius: 4px;
+                      background: #141414;
                   }
-                  h1, h2 { color: #333; }
-                  .highlight { background: #fff3cd; padding: 2px 4px; border-radius: 2px; }
+                  h1, h2 { color: var(--white); }
+                  p, li { color: var(--muted); }
+                  a { color: var(--muted); }
+                  a:hover { color: var(--white); }
               </style>
           </head>
           <body>
@@ -122,18 +137,21 @@ jobs:
                       parent: container,
                       textContent: 'Click me!',
                       style: {
-                          backgroundColor: '#007bff',
-                          color: 'white',
+                          backgroundColor: '#ffffff',
+                          color: '#0a0a0a',
                           padding: '10px 20px',
-                          border: 'none',
+                          border: '1px solid #ffffff',
                           borderRadius: '4px',
                           cursor: 'pointer',
-                          margin: '10px 0'
+                          margin: '10px 0',
+                          fontWeight: '600'
                       },
                       click: function() {
                           clickCount++;
                           this.textContent = \`Clicked \${clickCount} times!\`;
-                          this.style.backgroundColor = clickCount % 2 ? '#28a745' : '#007bff';
+                          const invert = clickCount % 2;
+                          this.style.backgroundColor = invert ? '#0a0a0a' : '#ffffff';
+                          this.style.color = invert ? '#ffffff' : '#0a0a0a';
                       }
                   });
                   
@@ -142,18 +160,18 @@ jobs:
                       parent: container,
                       width: 200,
                       height: 100,
-                      style: { border: '1px solid #ddd', margin: '10px 0' },
+                      style: { border: '1px solid #3a3a3a', margin: '10px 0' },
                       children: [
-                          rect({ fill: '#e9ecef', width: 200, height: 100 }),
-                          circle({ cx: 50, cy: 50, r: 20, fill: '#007bff' }),
-                          circle({ cx: 150, cy: 50, r: 20, fill: '#28a745' })
+                          rect({ fill: '#141414', width: 200, height: 100 }),
+                          circle({ cx: 50, cy: 50, r: 20, fill: '#ffffff' }),
+                          circle({ cx: 150, cy: 50, r: 20, fill: '#8a8a8a' })
                       ]
                   });
                   
                   // Form demo
                   const form = DIV({
                       parent: container,
-                      style: { marginTop: '20px' },
+                      style: { marginTop: '20px', color: '#a0a0a0' },
                       children: [
                           DIV({
                               children: [
@@ -161,7 +179,14 @@ jobs:
                                   INPUT({
                                       type: 'text',
                                       placeholder: 'Enter your name',
-                                      style: { margin: '0 10px', padding: '5px' }
+                                      style: {
+                                          margin: '0 10px',
+                                          padding: '5px',
+                                          background: '#0a0a0a',
+                                          color: '#f0f0f0',
+                                          border: '1px solid #3a3a3a',
+                                          borderRadius: '4px'
+                                      }
                                   })
                               ]
                           })

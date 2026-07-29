@@ -30,6 +30,20 @@
     </script>
 
     <style>
+        :root {
+            --bg: #0a0a0a;
+            --bg-elevated: #141414;
+            --bg-surface: #1a1a1a;
+            --bg-hover: #222;
+            --border: #2a2a2a;
+            --border-strong: #3a3a3a;
+            --text: #f0f0f0;
+            --text-muted: #a0a0a0;
+            --text-dim: #707070;
+            --white: #ffffff;
+            --gray: #8a8a8a;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -37,10 +51,12 @@
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
             line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--text);
+            background:
+                radial-gradient(ellipse 80% 50% at 50% -20%, #1f1f1f 0%, transparent 55%),
+                linear-gradient(180deg, #0d0d0d 0%, var(--bg) 40%, #050505 100%);
             min-height: 100vh;
         }
         
@@ -52,45 +68,60 @@
         
         .header {
             text-align: center;
-            color: white;
+            color: var(--white);
             margin-bottom: 40px;
+            padding-top: 24px;
         }
         
         .header h1 {
             font-size: 3.5rem;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: -0.03em;
+            font-weight: 700;
+            animation: fadeUp 0.6s ease-out;
         }
         
         .header .version {
-            background: rgba(255,255,255,0.2);
+            background: var(--bg-surface);
+            border: 1px solid var(--border-strong);
+            color: var(--text-muted);
             padding: 5px 15px;
             border-radius: 20px;
             display: inline-block;
             font-size: 0.9rem;
             margin-bottom: 20px;
+            animation: fadeUp 0.6s ease-out 0.08s both;
         }
         
         .header p {
             font-size: 1.3rem;
-            margin-bottom: 30px;
-            opacity: 0.9;
+            margin-bottom: 12px;
+            color: var(--text-muted);
+            animation: fadeUp 0.6s ease-out 0.16s both;
         }
         
         .install-section {
             text-align: center;
             margin-bottom: 40px;
+            animation: fadeUp 0.6s ease-out 0.24s both;
         }
         
         .install-code {
-            background: rgba(0,0,0,0.8);
-            color: #00ff88;
+            background: var(--bg-elevated);
+            color: var(--white);
+            border: 1px solid var(--border-strong);
             padding: 15px 25px;
             border-radius: 8px;
             font-family: 'Monaco', 'Consolas', monospace;
             font-size: 1.1rem;
             display: inline-block;
             margin: 10px;
+            transition: border-color 0.25s ease, background 0.25s ease;
+        }
+
+        .install-code:hover {
+            border-color: var(--gray);
+            background: var(--bg-hover);
         }
         
         .content-grid {
@@ -101,40 +132,52 @@
         }
         
         .card {
-            background: white;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
             border-radius: 12px;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, border-color 0.3s ease, background 0.3s ease;
         }
         
         .card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-4px);
+            border-color: var(--border-strong);
+            background: var(--bg-hover);
         }
         
         .card h3 {
-            color: #667eea;
+            color: var(--white);
             margin-bottom: 20px;
             font-size: 1.5rem;
         }
+
+        .card p {
+            color: var(--text-muted);
+        }
         
         .code-block {
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
+            background: var(--bg);
+            border: 1px solid var(--border);
             border-radius: 6px;
             padding: 15px;
             font-family: 'Monaco', 'Consolas', monospace;
             font-size: 0.9rem;
+            color: var(--text-muted);
             overflow-x: auto;
             margin: 15px 0;
         }
         
         .demo-area {
-            background: white;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
             border-radius: 12px;
             padding: 30px;
             margin: 30px 0;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .demo-area h3 {
+            color: var(--white);
+            margin-bottom: 16px;
         }
         
         .demo-controls {
@@ -145,50 +188,77 @@
         }
         
         .btn {
-            background: #667eea;
-            color: white;
-            border: none;
+            background: var(--white);
+            color: var(--bg);
+            border: 1px solid var(--white);
             padding: 10px 20px;
             border-radius: 6px;
             cursor: pointer;
             font-size: 0.9rem;
-            transition: background 0.3s ease;
+            font-weight: 600;
+            transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
         }
         
         .btn:hover {
-            background: #5a6fd8;
+            background: transparent;
+            color: var(--white);
         }
         
         .btn.secondary {
-            background: #6c757d;
+            background: transparent;
+            color: var(--text-muted);
+            border-color: var(--border-strong);
+            font-weight: 500;
         }
         
         .btn.secondary:hover {
-            background: #5a6268;
+            background: var(--bg-hover);
+            color: var(--white);
+            border-color: var(--gray);
         }
         
         .demo-output {
             min-height: 200px;
-            border: 2px dashed #dee2e6;
+            border: 1px dashed var(--border-strong);
             border-radius: 6px;
             padding: 20px;
-            background: #f8f9fa;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .demo-placeholder {
+            text-align: center;
+            color: var(--text-dim);
+            font-style: italic;
         }
         
         .footer {
             text-align: center;
-            color: white;
+            color: var(--text-dim);
             margin-top: 40px;
-            opacity: 0.8;
+            padding-bottom: 24px;
         }
         
         .footer a {
-            color: white;
+            color: var(--text-muted);
             text-decoration: none;
+            transition: color 0.2s ease;
         }
         
         .footer a:hover {
+            color: var(--white);
             text-decoration: underline;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         @media (max-width: 768px) {
@@ -206,7 +276,7 @@
     <div class="container">
         <div class="header">
             <h1>JDOM.js</h1>
-            <div class="version">v3.2.5</div>
+            <div class="version">v3.2.6</div>
             <p>Lightweight, Zero-Dependency DOM Builder</p>
             <p>Functional approach to creating and manipulating DOM elements with ease</p>
         </div>
@@ -269,7 +339,7 @@ $('#myId').addClass('active');</div>
                 <button class="btn secondary" onclick="clearDemo()">Clear Demo</button>
             </div>
             <div id="demo-output" class="demo-output">
-                <p style="text-align: center; color: #6c757d; font-style: italic;">
+                <p class="demo-placeholder">
                     Click a button above to see JDOM in action!
                 </p>
             </div>
@@ -306,7 +376,7 @@ $('#myId').addClass('active');</div>
             }
             
             if (demoOutput) {
-                demoOutput.innerHTML = '<p style="text-align: center; color: #6c757d; font-style: italic;">Demo cleared! Click a button above to see JDOM in action!</p>';
+                demoOutput.innerHTML = '<p class="demo-placeholder">Demo cleared! Click a button above to see JDOM in action!</p>';
             }
         }
 
@@ -327,16 +397,17 @@ $('#myId').addClass('active');</div>
                 parent: demoOutput,
                 style: {
                     padding: '20px',
-                    background: 'linear-gradient(45deg, #ff6b6b, #4ecdc4)',
+                    background: 'linear-gradient(135deg, #1a1a1a, #2a2a2a)',
+                    border: '1px solid #3a3a3a',
                     borderRadius: '8px',
-                    color: 'white',
+                    color: '#f0f0f0',
                     textAlign: 'center'
                 },
                 children: [
-                    DOM.H2({children: ['Basic Elements Demo']}),
-                    DOM.P({children: ['This paragraph was created with JDOM!']}),
+                    DOM.H2({children: ['Basic Elements Demo'], style: { color: '#ffffff', marginBottom: '12px' }}),
+                    DOM.P({children: ['This paragraph was created with JDOM!'], style: { color: '#a0a0a0', marginBottom: '12px' }}),
                     DOM.UL({
-                        style: { listStyle: 'none', padding: 0 },
+                        style: { listStyle: 'none', padding: 0, color: '#c0c0c0' },
                         children: [
                             DOM.LI({children: ['✨ Zero dependencies']}),
                             DOM.LI({children: ['🚀 Functional API']}),
@@ -363,19 +434,18 @@ $('#myId').addClass('active');</div>
             const card = DOM.DIV({
                 parent: demoOutput,
                 style: {
-                    background: 'white',
+                    background: '#141414',
                     borderRadius: '12px',
-                    boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
                     padding: '24px',
                     maxWidth: '400px',
                     margin: '20px auto',
-                    border: '1px solid #e9ecef'
+                    border: '1px solid #3a3a3a'
                 },
                 children: [
                     DOM.H3({
                         children: ['🎨 Styled Card'],
                         style: { 
-                            color: '#667eea',
+                            color: '#ffffff',
                             marginBottom: '16px',
                             fontSize: '1.5rem'
                         }
@@ -383,7 +453,7 @@ $('#myId').addClass('active');</div>
                     DOM.P({
                         children: ['This beautiful card was created entirely with JDOM using inline styles and nested elements.'],
                         style: {
-                            color: '#555',
+                            color: '#a0a0a0',
                             lineHeight: '1.6',
                             marginBottom: '16px'
                         }
@@ -391,13 +461,14 @@ $('#myId').addClass('active');</div>
                     DOM.BUTTON({
                         children: ['Click Me!'],
                         style: {
-                            background: '#667eea',
-                            color: 'white',
-                            border: 'none',
+                            background: '#ffffff',
+                            color: '#0a0a0a',
+                            border: '1px solid #ffffff',
                             padding: '10px 20px',
                             borderRadius: '6px',
                             cursor: 'pointer',
-                            fontSize: '1rem'
+                            fontSize: '1rem',
+                            fontWeight: '600'
                         },
                         click: function() {
                             // Track GA event
@@ -409,7 +480,9 @@ $('#myId').addClass('active');</div>
                                 });
                             }
                             
-                            this.style.background = this.style.background === 'rgb(102, 126, 234)' ? '#28a745' : '#667eea';
+                            const isWhite = this.style.background === 'rgb(255, 255, 255)' || this.style.background === '#ffffff';
+                            this.style.background = isWhite ? '#0a0a0a' : '#ffffff';
+                            this.style.color = isWhite ? '#ffffff' : '#0a0a0a';
                             this.textContent = this.textContent === 'Click Me!' ? 'Clicked! 🎉' : 'Click Me!';
                         }
                     })
@@ -436,7 +509,8 @@ $('#myId').addClass('active');</div>
                 height: 200,
                 viewBox: '0 0 400 200',
                 style: {
-                    background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                    background: 'linear-gradient(135deg, #111111, #1f1f1f)',
+                    border: '1px solid #3a3a3a',
                     borderRadius: '8px',
                     margin: '20px 0'
                 },
@@ -445,7 +519,7 @@ $('#myId').addClass('active');</div>
                         cx: 100,
                         cy: 100,
                         r: 40,
-                        fill: '#ff6b6b',
+                        fill: '#ffffff',
                         children: [
                             SVG.animateTransform({
                                 attributeName: 'transform',
@@ -461,7 +535,7 @@ $('#myId').addClass('active');</div>
                         y: 60,
                         width: 80,
                         height: 80,
-                        fill: '#4ecdc4',
+                        fill: '#8a8a8a',
                         rx: 10,
                         children: [
                             SVG.animateTransform({
@@ -475,7 +549,7 @@ $('#myId').addClass('active');</div>
                     }),
                     SVG.polygon({
                         points: '340,60 380,140 300,140',
-                        fill: '#ffd93d',
+                        fill: '#c0c0c0',
                         children: [
                             SVG.animateTransform({
                                 attributeName: 'transform',
@@ -490,9 +564,9 @@ $('#myId').addClass('active');</div>
                         x: 200,
                         y: 180,
                         textAnchor: 'middle',
-                        fill: 'white',
+                        fill: '#f0f0f0',
                         fontSize: '16',
-                        fontFamily: 'Arial, sans-serif',
+                        fontFamily: 'Segoe UI, Helvetica Neue, sans-serif',
                         children: ['SVG Animation with JDOM']
                     })
                 ]
@@ -517,16 +591,16 @@ $('#myId').addClass('active');</div>
             const container = DOM.DIV({
                 parent: demoOutput,
                 style: {
-                    background: 'white',
+                    background: '#141414',
                     borderRadius: '8px',
                     padding: '20px',
-                    border: '1px solid #dee2e6'
+                    border: '1px solid #2a2a2a'
                 },
                 children: [
                     DOM.H3({
                         children: ['📋 Interactive Todo List'],
                         style: { 
-                            color: '#333',
+                            color: '#ffffff',
                             marginBottom: '20px'
                         }
                     }),
@@ -544,9 +618,11 @@ $('#myId').addClass('active');</div>
                                 style: {
                                     flex: '1',
                                     padding: '10px',
-                                    border: '2px solid #dee2e6',
+                                    border: '1px solid #3a3a3a',
                                     borderRadius: '6px',
-                                    fontSize: '1rem'
+                                    fontSize: '1rem',
+                                    background: '#0a0a0a',
+                                    color: '#f0f0f0'
                                 },
                                 keydown: function(e) {
                                     if (e.key === 'Enter') {
@@ -558,11 +634,12 @@ $('#myId').addClass('active');</div>
                                 children: ['Add'],
                                 style: {
                                     padding: '10px 20px',
-                                    background: '#28a745',
-                                    color: 'white',
-                                    border: 'none',
+                                    background: '#ffffff',
+                                    color: '#0a0a0a',
+                                    border: '1px solid #ffffff',
                                     borderRadius: '6px',
-                                    cursor: 'pointer'
+                                    cursor: 'pointer',
+                                    fontWeight: '600'
                                 },
                                 click: addTodoItem
                             })
@@ -600,10 +677,11 @@ $('#myId').addClass('active');</div>
                             display: 'flex',
                             alignItems: 'center',
                             padding: '10px',
-                            background: '#f8f9fa',
+                            background: '#1a1a1a',
                             margin: '5px 0',
                             borderRadius: '6px',
-                            border: '1px solid #dee2e6'
+                            border: '1px solid #2a2a2a',
+                            color: '#f0f0f0'
                         },
                         children: [
                             DOM.INPUT({
@@ -634,9 +712,9 @@ $('#myId').addClass('active');</div>
                             DOM.BUTTON({
                                 children: ['×'],
                                 style: {
-                                    background: '#dc3545',
-                                    color: 'white',
-                                    border: 'none',
+                                    background: '#2a2a2a',
+                                    color: '#f0f0f0',
+                                    border: '1px solid #3a3a3a',
                                     borderRadius: '4px',
                                     width: '30px',
                                     height: '30px',
