@@ -2,6 +2,8 @@
 
 A lightweight JavaScript DOM builder library that provides a functional approach to creating and manipulating DOM elements. Zero dependencies, modern ES6+ support, and comprehensive DOM/SVG element creation.
 
+[![JDOM.js landing page](README/screenshot.jpg)](https://higginsrob.github.io/jdom/)
+
 ## Features
 
 -   🚀 **Zero Dependencies** - Lightweight and fast
